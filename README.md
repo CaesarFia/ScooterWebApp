@@ -10,9 +10,9 @@ To install the dependencies, you should use npm and install the dependencies usi
 
 Because we are not hosting you will have to serve a Postgres database on your local machine. A docker-compose file is provided to launch a Postgres database on localhost:5432 with the username `postgres` and a password you define. To configure the password write the password in the `.secrets/postgres_password` file. To start the database, run the docker-compose file with the command `docker-compose up -d` (or `docker compose up -d` if you are using a modern version of Docker).
 
-Often times a .env file is used to store environment variables for the Node.js server. This file is ignored by git and will not be pushed to the repository. You should create a `.env` file in the root of the project and add the `POSTGRES_PASSWORD` variable to it. This variable should be set to the password you defined in the `.secrets/postgres_password` file.
+Often times a .env file is used to store environment variables for the Node.js server. This file is ignored by git and will not be pushed to the repository. You should create a `.env` file in the root of the project and add the `DATABASE_URL` variable to it. This variable should be set to `postgres://postgres:YOUR_POSTGRES_PASSWORD_HERE@localhost:5432/postgres`.
 
-After you have configure the database and added the password to the `.env` file you can run the `npm run dev` command to start the server.
+After you have configured the database and added the password to the `.env` file you can run the `npm run dev` command to start the server.
 
 ## Developing
 
