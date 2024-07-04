@@ -13,11 +13,11 @@ export const users = pgTable("users", {
 
 export const  scooters = pgTable("scooters", {
   id: serial("id").primaryKey().notNull(),
-  latitude: numeric("latitude", { precision: 6, scale: 3 }).notNull(),
-  longitude: numeric("longitude", { precision: 6, scale: 3 }).notNull(),
+  latitude: integer("latitude").notNull(),
+  longitude: integer("longitude").notNull(),
   checkedOut: boolean("checked_out").notNull(),
   needRepairs: boolean("need_repairs").notNull(),
-  battery: numeric("battery", { precision: 4, scale: 2}).notNull()
+  battery: integer("battery").notNull()
 })
 
 export const transactions = pgTable("transactions", {
