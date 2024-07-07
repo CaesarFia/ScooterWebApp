@@ -26,6 +26,7 @@ export const POST = async function ( request: NextRequest ) {
     const bat = searchParams.get("battery")
     const battery = bat ? +bat : null
     
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     latitude && longitude && battery ? await db.insert(scooters).values({
         latitude,
         longitude,

@@ -26,6 +26,7 @@ export const POST = async function ( request: NextRequest) {
     const password = searchParams.get("password")
     const admin = searchParams.get("admin")
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     firstname && lastname && email && password ? await db.insert(users).values({
         firstname,
         lastname,

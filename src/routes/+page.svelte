@@ -1,4 +1,5 @@
 <script>
+	import { enhance } from "$app/forms";
   import "../app.css";
 </script>
 
@@ -34,6 +35,10 @@ const result = await response.json
 	<h2>
 		try editing <strong>src/routes/+page.svelte</strong>
 	</h2>
+	
+	<form method="post" use:enhance>
+		<button>Sign out</button>
+	</form>
 
 </section>
 	<style lang="postcss">
