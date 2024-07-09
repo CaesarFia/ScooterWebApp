@@ -44,7 +44,8 @@ export const actions: Actions = {
 			firstname: username,
             lastname: username,
             email: username,
-			passwordHash: passwordHash
+			passwordHash: passwordHash,
+			isAdmin: true
 		});
 
 		const session = await lucia.createSession(userId, {});

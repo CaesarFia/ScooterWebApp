@@ -17,7 +17,11 @@ export const lucia = new Lucia(adapter, {
       // attributes has the type of DatabaseUserAttributes
       userId: attributes.userId,
       firstname: attributes.firstname,
-      lastname: attributes.lastname
+      lastname: attributes.lastname,
+      email: attributes.email,
+      latitude: attributes.latitude,
+      longitude: attributes.longitude,
+      isAdmin: attributes.isAdmin
     };
   }
 });
@@ -33,4 +37,8 @@ interface DatabaseUserAttributes {
 	userId: string
   firstname: string
   lastname: string
+  email: string
+  latitude: number
+  longitude: number
+  isAdmin: boolean | null
 }

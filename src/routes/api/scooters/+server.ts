@@ -1,39 +1,80 @@
-import db from "$lib/db"
-import { scooters } from "$lib/db/schema"
-import { NextRequest, NextResponse } from "next/server"
+// src/routes/api/scooters/+server.js
+import db from "$lib/db";
+import { scooters } from "$lib/db/schema";
+import { generateIdFromEntropySize } from "lucia";
+import { json } from "@sveltejs/kit";
+import { eq, sql } from "drizzle-orm";
+import { lucia } from "$lib/server/auth";
 
-// Generic API call, will alter once it becomes clear what we want to do with scooters.
+// Handle GET requests
+export const GET = async ({ cookies }) => {
+    const distance = 11
+    const sessionId = cookies.get("auth_session")
+    if(!sessionId) return json({ success: false })
+    const { user } = await lucia.validateSession(sessionId)
 
-export const GET = async function ( request: NextRequest ) {
-    const {searchParams} = new URL(request.url)
+    if(!user || user.id===null) return json({ success: false })
 
-    const scooters = await db.query.scooters.findMany()
+    const scootersList = user.isAdmin===null ?  await db.select().from(scooters).where(
+        sql`${!scooters.checkedOut}`
+    ) : await db.select().from(scooters)
+    return json(scootersList ? scootersList : { success: false });
+};
 
-    return NextResponse.json(scooters ? scooters : {})
-}
+// Handle POST requests
+export const POST = async ({ request, cookies }) => {
+    const {latitude, longitude, battery} = await request.json()
 
-export const POST = async function ( request: NextRequest ) {
-    const {searchParams} = new URL(request.url)
+    const sessionId = cookies.get("auth_session")
+    if(!sessionId) return json(cookies.getAll())
+    const { user } = await lucia.validateSession(sessionId)
 
-    const lat = searchParams.get("latitude")
-    const latitude = lat ? parseFloat(lat) : null
-    const long = searchParams.get("longitude")
-    const longitude = long ? +long : null
-    const check = searchParams.get("checkedOut")
-    const checkedOut = check && check === "true" ? true : false
-    const repair = searchParams.get("needRepairs")
-    const needRepairs = repair && repair === "true" ? true : false
-    const bat = searchParams.get("battery")
-    const battery = bat ? +bat : null
+    if(!user || user.id===null) return json({ success: false })
+
+    const id = generateIdFromEntropySize(10)
+    if (user.isAdmin!=null &&  latitude && longitude && battery) {
+        await db.insert(scooters).values({
+            id,
+            latitude,
+            longitude,
+            checkedOut: false,
+            needRepairs: false,
+            battery
+        });
+        return json({ success: true , id: id});
+    } else {
+        console.error("isAdmin: " + user.isAdmin + "\nlat: " + latitude + "\nlong: " + longitude + "\nbattery: " + battery)
+        return json({ success: false, isAdmin: user.isAdmin });
+    }
+};
+
+export const PATCH = async ({ request, cookies }) => {
+    const {latitude, longitude, battery, scooterId, needRepairs, checkedOut} = await request.json()
+    const sessionId = cookies.get("auth_session")
+    if(!sessionId) return json({ success: false })
+    const { user } = await lucia.validateSession(sessionId)
+
+    if(!user || user.id===null) return json({ success: false })
+
+
+    if(user.isAdmin===null) return json({ success: false })
     
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    latitude && longitude && battery ? await db.insert(scooters).values({
-        latitude,
-        longitude,
-        checkedOut,
-        needRepairs,
-        battery
-    }) : null
+    await db.update(scooters).set({ battery, latitude, longitude, needRepairs, checkedOut }).where(eq(scooters.id, scooterId))
 
-    return latitude && longitude && battery ? NextResponse.json({ success: true }) : NextResponse.json({ success: false }) // TODO: legit error handling
+    return json({ success: true })
 }
+
+export const DELETE = async ({ request, cookies }) => {
+    const { scooterId } = await request.json();
+    const sessionId = cookies.get("auth_session")
+    if(!sessionId) return json({ success: false })
+    const { user } = await lucia.validateSession(sessionId)
+
+    if(!user || user?.id===null) return json({ success: false })
+
+
+    if (user.isAdmin === null) return json({ success: false });
+
+    await db.delete(scooters).where(sql`(id = ${scooterId})`);
+    return json({ success: true });
+};

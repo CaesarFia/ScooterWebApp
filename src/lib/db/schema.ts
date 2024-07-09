@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { serial, text, integer, date, pgTable, boolean, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const sessionTable = pgTable("session", {
@@ -32,12 +32,12 @@ export const  scooters = pgTable("scooters", {
 })
 
 export const transactions = pgTable("transactions", {
-  id: serial("id").primaryKey().notNull(),
+  id: text("id").primaryKey().notNull(),
   customerId: text("customer_id").references(() => users.id, {onDelete: "cascade"}).notNull(),
   scooterId: text("scooter_id").references(() => scooters.id, { onDelete: "cascade" }).notNull(),
   employeeId: text("employee_id").references(() => users.id, {onDelete: "cascade"}).notNull(),
   amount: integer("amount"),
-  checkInTime: date("check_in_time"),
+  checkInTime: date("check_in_time").default(sql`now()`),
   checkOutTime: date("check_out_time")
 })
 

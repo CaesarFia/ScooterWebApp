@@ -1,39 +1,58 @@
 import { users } from "$lib/db/schema"
 import db from "$lib/db"
-import { NextRequest, NextResponse } from "next/server"
+import { generateIdFromEntropySize } from "lucia";
+import { json } from "@sveltejs/kit";
+import { eq, sql } from "drizzle-orm";
+import { lucia } from "$lib/server/auth";
 
 // Maybe add filterSchema for safety
 
-export const GET = async function ( request: NextRequest ) {
-    const {searchParams} = new URL(request.url)
-    
-    const email = searchParams.get("email")
-    const password = searchParams.get("password")
+export const GET = async function ({ cookies }) {
+    const sessionId = cookies.get("auth_session")
+    if(!sessionId) return json(cookies.getAll())
+    const { user } = await lucia.validateSession(sessionId)
+    if (!user) return json({ success: false })
 
-    const users = email && password ? await db.query.users.findFirst({
-        where: (table, { eq }) => eq(table.email, email) && eq(table.passwordHash, password) // TODO: Implement hash
-    }) : null
-
-    return NextResponse.json(users ? users : {})
+    const userData = user.isAdmin != null 
+        ? await db.select().from(users)
+        : await db.select().from(users).where(sql`(${user.email} === ${users.email})`)
+    return userData ? json(userData) : json({ success: false })
 }
 
-export const POST = async function ( request: NextRequest) {
-    const {searchParams} = new URL(request.url)
+export const POST = async function ({ request, cookies }) {
+    const {firstname, lastname, email, passwordHash, isAdmin} = await request.json()
+    const id = generateIdFromEntropySize(10)
 
-    const firstname = searchParams.get("firstname")
-    const lastname = searchParams.get("lastname")
-    const email = searchParams.get("email")
-    const password = searchParams.get("password")
-    const admin = searchParams.get("admin")
+    const sessionId = cookies.get("auth_session")
+    if(!sessionId) return json(cookies.getAll())
+    const { user } = await lucia.validateSession(sessionId)
+    if (!user) return json({ success: false })
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    firstname && lastname && email && password ? await db.insert(users).values({
+    const newsAdmin = user.isAdmin ? isAdmin : null
+    const credit = isAdmin===null ? 0 : null
+    await db.insert(users).values({
+        id,
         firstname,
         lastname,
         email,
-        passwordHash: password,
-        isAdmin: admin ? (admin === "true" ? true : false) : null 
-    }) : null
+        passwordHash,
+        credit,
+        isAdmin: newsAdmin
+    })
 
-    return firstname && lastname && email && password ? NextResponse.json({ success: true }) : NextResponse.json({ success: false }) // TODO: legit error handling
+    return json({ id, isAdmin })
 }
+export const DELETE = async ({ request, cookies }) => {
+    const { userId } = await request.json();
+    const sessionId = cookies.get("auth_session")
+    if(!sessionId) return json({ success: false })
+    const { user } = await lucia.validateSession(sessionId)
+
+    if(!user) return json({ success: false })
+
+
+    if (user.isAdmin === null) return json({ success: false });
+
+    await db.delete(users).where(eq(users.id,userId));
+    return json({ success: true });
+};

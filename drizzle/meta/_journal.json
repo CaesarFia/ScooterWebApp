@@ -8,6 +8,20 @@
       "when": 1720368948536,
       "tag": "0000_safe_scarlet_witch",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1720479487644,
+      "tag": "0001_fuzzy_scrambler",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1720553880266,
+      "tag": "0002_shocking_komodo",
+      "breakpoints": true
     }
   ]
 }
