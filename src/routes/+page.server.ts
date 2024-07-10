@@ -1,8 +1,5 @@
 import { lucia } from "$lib/server/auth";
-import { fail, redirect, type Actions, type ServerLoad} from "@sveltejs/kit";
-export const load: ServerLoad = async ({ locals }) => {
-	// ...
-};
+import { fail, redirect, type Actions} from "@sveltejs/kit";
 
 export const actions: Actions = {
 	default: async (event) => {

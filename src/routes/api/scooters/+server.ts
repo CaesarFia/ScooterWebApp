@@ -8,7 +8,6 @@ import { lucia } from "$lib/server/auth";
 
 // Handle GET requests
 export const GET = async ({ cookies }) => {
-    const distance = 11
     const sessionId = cookies.get("auth_session")
     if(!sessionId) return json({ success: false })
     const { user } = await lucia.validateSession(sessionId)

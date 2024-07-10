@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { serial, text, integer, date, pgTable, boolean, timestamp, uuid } from "drizzle-orm/pg-core";
+import { text, integer, date, pgTable, boolean, timestamp } from "drizzle-orm/pg-core";
 
 export const sessionTable = pgTable("session", {
 	id: text("id").primaryKey(),
