@@ -44,7 +44,7 @@ export async function deleteScooter(scooterId: string) {
         return { success: false };
     }
 }
-export async function getScooter() {
+export async function getScooters() {
     try {
         const response = await fetch(APIS, {
             method: 'GET',

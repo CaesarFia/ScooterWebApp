@@ -1,7 +1,7 @@
 <script lang=ts>
 	import { enhance } from "$app/forms"
-	import { addScooter, getScooter, deleteScooter, updateScooter, addUser, getUser, deleteUser, addTransaction, deleteTransaction, updateTransaction, getTransactions } from "$lib/calls";
-  	import "../app.css";
+	import { addScooter, getScooters, deleteScooter, updateScooter, addUser, getUser, deleteUser, addTransaction, deleteTransaction, updateTransaction, getTransactions } from "$lib/calls";
+  	import "$app.css";
 
 	let recentScooterId : string
 	let recentUserId: string
@@ -89,7 +89,7 @@ const result = await response.json
 	<h3><b><u>Scooters</u></b></h3>
 
 	<button on:click={async () => console.log(await addScooterTest(1,1,1))}> Add scooter </button>
-	<button on:click={async () => console.log(await getScooter())}> Get scooters </button>
+	<button on:click={async () => console.log(await getScooters())}> Get scooters </button>
 	<button on:click={async () => console.log(await deleteScooterTest())}> Delete scooter </button>
 	<button on:click={async () => console.log(await updateScooterTest())}> Update scooter </button>
 

@@ -1,6 +1,6 @@
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
-import { sessionTable, users } from "../db/schema";
-import db from "../db";
+import { sessionTable, users } from "$lib/db/schema";
+import db from "$lib/db";
 import { Lucia } from "lucia";
 import { dev } from "$app/environment";
 
