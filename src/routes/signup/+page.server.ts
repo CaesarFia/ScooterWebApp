@@ -6,21 +6,25 @@ import { hash } from "@node-rs/argon2";
 import db from "$lib/db";
 import { users } from "$lib/db/schema";
 
+function isValidEmail(email: string): boolean {
+	return /.+@.+/.test(email);
+}
+
 export const actions: Actions = {
 	default: async (event) => {
 		const formData = await event.request.formData();
-		const username = formData.get("username");
+		const firstname = formData.get("firstname");
+		const lastname = formData.get("lastname");
+		const email = formData.get("email");
 		const password = formData.get("password");
 		// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
 		// keep in mind some database (e.g. mysql) are case insensitive
 		if (
-			typeof username !== "string" ||
-			username.length < 3 ||
-			username.length > 31 ||
-			!/^[a-z0-9_-]+$/.test(username)
+			typeof email !== "string" ||
+			!isValidEmail(email)
 		) {
 			return fail(400, {
-				message: "Invalid username"
+				message: "Invalid email"
 			});
 		}
 		if (typeof password !== "string" || password.length < 6 || password.length > 255) {
@@ -28,6 +32,10 @@ export const actions: Actions = {
 				message: "Invalid password"
 			});
 		}
+		if (typeof firstname !== "string" || typeof lastname !== "string")
+			return fail(400, {
+				message: "Invalid name"
+			});
 
 		const userId = generateIdFromEntropySize(10); // 16 characters long
 		const passwordHash = await hash(password, {
@@ -41,9 +49,9 @@ export const actions: Actions = {
 		// TODO: check if username is already used
 		await db.insert(users).values({
 			id: userId,
-			firstname: username,
-            lastname: username,
-            email: username,
+			firstname: firstname,
+            lastname: lastname,
+            email: email,
 			passwordHash: passwordHash,
 			isAdmin: true
 		});

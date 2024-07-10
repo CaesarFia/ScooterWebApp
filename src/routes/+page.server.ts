@@ -1,10 +1,11 @@
 import { lucia } from "$lib/server/auth";
-import { fail, redirect, type Actions} from "@sveltejs/kit";
+import { redirect, type Actions} from "@sveltejs/kit";
 
+// Handles logging out
 export const actions: Actions = {
 	default: async (event) => {
 		if (!event.locals.session) {
-			return fail(401);
+			redirect(302, "/login");
 		}
 		await lucia.invalidateSession(event.locals.session.id);
 		const sessionCookie = lucia.createBlankSessionCookie();

@@ -3,20 +3,18 @@ import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { verify } from "@node-rs/argon2";
 import db from "$lib/db";
 
+
 export const actions: Actions = {
 	default: async (event) => {
 		const formData = await event.request.formData();
-		const username = formData.get("username");
+		const email = formData.get("email")
 		const password = formData.get("password");
 
 		if (
-			typeof username !== "string" ||
-			username.length < 3 ||
-			username.length > 31 ||
-			!/^[a-z0-9_-]+$/.test(username)
+			typeof email !== "string"
 		) {
 			return fail(400, {
-				message: "Invalid username"
+				message: "Invalid email"
 			});
 		}
 		if (typeof password !== "string" || password.length < 6 || password.length > 255) {
@@ -26,7 +24,7 @@ export const actions: Actions = {
 		}
 
 		const existingUser = await db.query.users.findFirst({
-			where: (table, { eq }) => {return eq(table.firstname, username)}
+			where: (table, { eq }) => {return eq(table.email, email)}
 		})
 		if (!existingUser) {
 			// NOTE:
