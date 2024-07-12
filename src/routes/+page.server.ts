@@ -13,6 +13,8 @@ export const actions: Actions = {
 			path: ".",
 			...sessionCookie.attributes
 		});
+		event.locals.session = null;
+		event.locals.user = null;
 		redirect(302, "/login");
 	}
 };
