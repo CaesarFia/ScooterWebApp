@@ -1,7 +1,7 @@
 <script lang=ts>
 	import { enhance } from "$app/forms"
 	import { addScooter, getScooters, deleteScooter, updateScooter, addUser, getUser, deleteUser, addTransaction, deleteTransaction, updateTransaction, getTransactions } from "$lib/calls";
-  	import "$app.css";
+  	import "$lib/css/app.css";
 
 	let recentScooterId : string
 	let recentUserId: string
