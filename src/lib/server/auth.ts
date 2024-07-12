@@ -12,16 +12,12 @@ export const lucia = new Lucia(adapter, {
 			secure: !dev
 		}
 	},
-  getUserAttributes: (attributes: DatabaseUserAttributes) => {
+  getUserAttributes: (attributes) => {
     return {
       // attributes has the type of DatabaseUserAttributes
-      userId: attributes.userId,
       firstname: attributes.firstname,
       lastname: attributes.lastname,
       email: attributes.email,
-      latitude: attributes.latitude,
-      longitude: attributes.longitude,
-      isAdmin: attributes.isAdmin
     };
   }
 });
@@ -34,11 +30,9 @@ declare module "lucia" {
 }
 
 interface DatabaseUserAttributes {
-	userId: string
   firstname: string
   lastname: string
   email: string
-  latitude: number
-  longitude: number
-  isAdmin: boolean | null
+  ascustomer: { id: string, balance: number } | null,
+  asemployee: { id: string, isAdmin: boolean } | null,
 }
