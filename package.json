@@ -11,7 +11,9 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
-		"test:unit": "vitest"
+		"test:unit": "vitest",
+		"generate": "drizzle-kit generate",
+		"migrate": "drizzle-kit migrate"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",
@@ -25,6 +27,7 @@
 		"@types/eslint": "^8.56.7",
 		"@types/node": "^20.14.9",
 		"autoprefixer": "^10.4.19",
+		"drizzle-kit": "^0.22.7",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -43,6 +46,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"dotenv": "^16.4.5",
+		"drizzle-orm": "^0.31.2",
+		"postgres": "^3.4.4",
 		"fast-glob": "^3.3.2",
 		"mapbox-gl": "^3.5.0"
 	}
