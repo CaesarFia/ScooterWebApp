@@ -3,7 +3,7 @@ import db from "$lib/db";
 import { scooters } from "$lib/db/schema";
 import { generateIdFromEntropySize } from "lucia";
 import { json, error } from "@sveltejs/kit";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 // Handle GET requests
 export const GET = async ({ locals }) => {
@@ -11,10 +11,11 @@ export const GET = async ({ locals }) => {
     if (!user)
         error(403, "You must be logged in to access this resource.");
 
-    const scootersList = user.isAdmin===null ? await db.select().from(scooters).where(
-        sql`${!scooters.checkedOut}`
-    ) : await db.select().from(scooters)
-    return json(scootersList ? scootersList : { success: false });
+    const scootersList =
+        user.role === "customer" ?
+        await db.select().from(scooters).where(eq(scooters.checkedOut, false)) :
+        await db.select().from(scooters)
+    return json(scootersList);
 };
 
 // Handle POST requests
@@ -24,7 +25,7 @@ export const POST = async ({ request, locals }) => {
         error(403, "Forbidden.");
 
     const id = generateIdFromEntropySize(10)
-    const {latitude, longitude, battery} = await request.json()
+    const { latitude, longitude, battery } = await request.json()
     if (latitude && longitude && battery) {
         await db.insert(scooters).values({
             id,
@@ -34,7 +35,7 @@ export const POST = async ({ request, locals }) => {
             needRepairs: false,
             battery
         });
-        return json({ success: true , id: id});
+        return json({ id: id });
     } else {
         console.error("isAdmin: " + user.isAdmin + "\nlat: " + latitude + "\nlong: " + longitude + "\nbattery: " + battery);
         error(422, "Missing required fields, required to have 'latitude', 'longitude', and 'battery'.");
@@ -46,9 +47,7 @@ export const PATCH = async ({ request, locals }) => {
     if (!user || user.role === "customer")
         error(403, "Forbidden.");
 
-    const {latitude, longitude, battery, scooterId, needRepairs, checkedOut} = await request.json()
-
-    
+    const { latitude, longitude, battery, scooterId, needRepairs, checkedOut } = await request.json()
     await db.update(scooters).set({ battery, latitude, longitude, needRepairs, checkedOut }).where(eq(scooters.id, scooterId))
 
     return json({ success: true })
@@ -57,10 +56,10 @@ export const PATCH = async ({ request, locals }) => {
 export const DELETE = async ({ request, locals }) => {
     const { user } = locals;
     if (!user || user.role === "customer")
-        error(403, "You must be logged in to access this resource.");
+        error(403, "Forbidden.");
 
     const { scooterId } = await request.json();
 
-    await db.delete(scooters).where(sql`(id = ${scooterId})`);
+    await db.delete(scooters).where(eq(scooters.id, scooterId));
     return json({ success: true });
 };
