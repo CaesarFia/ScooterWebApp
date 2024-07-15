@@ -106,7 +106,7 @@ const result = await response.json
 	<button on:click={async () => console.log(await deleteTransactionTest())}> Delete Transaction </button>
 	<button on:click={async () => console.log(await updateTransactionTest(1))}> Update Transaction </button>
 	
-	<form method="post" use:enhance>
+	<form method="POST" use:enhance>
 		<button>Sign out</button>
 	</form>
 
