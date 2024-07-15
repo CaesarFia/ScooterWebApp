@@ -6,10 +6,9 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			user: User | null;
+			user: User & { balance: string | null, isAdmin: boolean | null, role: "customer" | "employee" | "admin" } | null;
 			session: Session | null;
 		}
-		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
 	}
