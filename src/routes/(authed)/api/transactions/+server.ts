@@ -5,10 +5,8 @@ import { json } from "@sveltejs/kit";
 import { sql, eq } from "drizzle-orm";
 import { lucia } from "$lib/server/auth";
 
-export const GET = async function ({ cookies }) {
-    const sessionId = cookies.get("auth_session")
-    if(!sessionId) return json(cookies.getAll())
-    const { user } = await lucia.validateSession(sessionId)
+export const GET = async function ({ locals }) {
+    const { user } = locals;
     if (!user) return json({ success: false })
 
     const history = user.isAdmin===null  && user.id
@@ -16,11 +14,9 @@ export const GET = async function ({ cookies }) {
         : await db.select().from(transactions)
     return json(history)
 }
-export const POST = async function ({ request, cookies}) {
+export const POST = async function ({ request, locals }) {
+    const { user } = locals;
     const {customerId, scooterId} = await request.json()
-    const sessionId = cookies.get("auth_session")
-    if(!sessionId) return json(cookies.getAll())
-    const { user } = await lucia.validateSession(sessionId)
     if (!user) return json({ success: false })
     if (user.isAdmin === null) return json({ success: false })
     
@@ -36,11 +32,9 @@ export const POST = async function ({ request, cookies}) {
     return json({ id })
 }
 
-export const PATCH = async ({ request, cookies }) => {
+export const PATCH = async ({ request, locals }) => {
+    const { user } = locals;
     const { amount, transactionId } = await request.json()
-    const sessionId = cookies.get("auth_session")
-    if(!sessionId) return json({ success: false })
-    const { user } = await lucia.validateSession(sessionId)
 
     if(!user) return json({ success: false })
 
@@ -52,11 +46,9 @@ export const PATCH = async ({ request, cookies }) => {
     return json({ success: true })
 }
 
-export const DELETE = async ({ request, cookies }) => {
+export const DELETE = async ({ request, locals }) => {
+    const { user } = locals;
     const { transactionId } = await request.json();
-    const sessionId = cookies.get("auth_session")
-    if(!sessionId) return json({ success: false })
-    const { user } = await lucia.validateSession(sessionId)
 
     if(!user) return json({ success: false })
 

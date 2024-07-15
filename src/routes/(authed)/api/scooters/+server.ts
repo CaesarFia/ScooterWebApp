@@ -7,26 +7,20 @@ import { eq, sql } from "drizzle-orm";
 import { lucia } from "$lib/server/auth";
 
 // Handle GET requests
-export const GET = async ({ cookies }) => {
-    const sessionId = cookies.get("auth_session")
-    if(!sessionId) return json({ success: false })
-    const { user } = await lucia.validateSession(sessionId)
+export const GET = async ({ locals }) => {
+    const { user } = locals;
+    if (!user) return json({ success: false });
 
-    if(!user || user.id===null) return json({ success: false })
-
-    const scootersList = user.isAdmin===null ?  await db.select().from(scooters).where(
+    const scootersList = user.isAdmin===null ? await db.select().from(scooters).where(
         sql`${!scooters.checkedOut}`
     ) : await db.select().from(scooters)
     return json(scootersList ? scootersList : { success: false });
 };
 
 // Handle POST requests
-export const POST = async ({ request, cookies }) => {
+export const POST = async ({ request, locals }) => {
+    const { user } = locals;
     const {latitude, longitude, battery} = await request.json()
-
-    const sessionId = cookies.get("auth_session")
-    if(!sessionId) return json(cookies.getAll())
-    const { user } = await lucia.validateSession(sessionId)
 
     if(!user || user.id===null) return json({ success: false })
 
@@ -47,11 +41,9 @@ export const POST = async ({ request, cookies }) => {
     }
 };
 
-export const PATCH = async ({ request, cookies }) => {
+export const PATCH = async ({ request, locals }) => {
+    const { user } = locals;
     const {latitude, longitude, battery, scooterId, needRepairs, checkedOut} = await request.json()
-    const sessionId = cookies.get("auth_session")
-    if(!sessionId) return json({ success: false })
-    const { user } = await lucia.validateSession(sessionId)
 
     if(!user || user.id===null) return json({ success: false })
 
@@ -63,11 +55,9 @@ export const PATCH = async ({ request, cookies }) => {
     return json({ success: true })
 }
 
-export const DELETE = async ({ request, cookies }) => {
+export const DELETE = async ({ request, locals }) => {
+    const { user } = locals;
     const { scooterId } = await request.json();
-    const sessionId = cookies.get("auth_session")
-    if(!sessionId) return json({ success: false })
-    const { user } = await lucia.validateSession(sessionId)
 
     if(!user || user?.id===null) return json({ success: false })
 
