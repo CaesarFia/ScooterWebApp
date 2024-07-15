@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { text, integer, real, numeric, pgTable, boolean, timestamp } from "drizzle-orm/pg-core";
+import { text, integer, real, numeric, pgTable, boolean, timestamp, pgView } from "drizzle-orm/pg-core";
 
 export const sessionTable = pgTable("session", {
 	id: text("id").primaryKey(),
@@ -16,7 +16,7 @@ export const users = pgTable("users", {
   id: text("id").primaryKey().notNull(),
   firstname: text("firstname").notNull(),
   lastname: text("lastname").notNull(),
-  email: text("email").notNull(),
+  email: text("email").unique().notNull(),
   passwordHash: text("password_hash").notNull(),
 });
 
@@ -158,3 +158,34 @@ export const rentalsRelations = relations(rentals, ({ one }) => ({
     references: [transactions.id],
   }),
 }));
+
+
+// Define users_info view to get all user info
+// I would've used this view in the auth.ts file
+// to get all user info in one query but drizzle-orm
+// is not stable enough to handle views
+export const usersInfo = pgView("users_info", {
+  id: text("id").primaryKey().notNull(),
+  firstname: text("firstname").notNull(),
+  lastname: text("lastname").notNull(),
+  email: text("email").unique().notNull(),
+  passwordHash: text("password_hash").notNull(),
+  balance: numeric("balance", { precision: 1000, scale: 2 }),
+  isAdmin: boolean("is_admin"),
+}).existing();
+
+// This query was used to create the users_info view
+// For the exact SQL, see the migration file 0005_premium_stone_men.sql
+// .as(
+//   (qb) => qb.select({
+//     id: users.id,
+//     firstname: users.firstname,
+//     lastname: users.lastname,
+//     email: users.email,
+//     passwordHash: users.passwordHash,
+//     balance: customers.balance,
+//     isAdmin: employees.isAdmin,
+//   }).from(users)
+//     .leftJoin(customers, eq(users.id, customers.id))
+//     .leftJoin(employees, eq(users.id, employees.id))
+// );

@@ -12,9 +12,8 @@ export const lucia = new Lucia(adapter, {
 			secure: !dev
 		}
 	},
-  getUserAttributes: (attributes) => {
+  getUserAttributes: (attributes: DatabaseUserAttributes) => {    
     return {
-      // attributes has the type of DatabaseUserAttributes
       firstname: attributes.firstname,
       lastname: attributes.lastname,
       email: attributes.email,
@@ -33,6 +32,5 @@ interface DatabaseUserAttributes {
   firstname: string
   lastname: string
   email: string
-  ascustomer: { id: string, balance: number } | null,
-  asemployee: { id: string, isAdmin: boolean } | null,
+  passwordHash: string
 }

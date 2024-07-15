@@ -29,6 +29,20 @@
       "when": 1720752953320,
       "tag": "0003_mighty_jazinda",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1720882352590,
+      "tag": "0004_whole_captain_universe",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1720882391112,
+      "tag": "0005_premium_stone_men",
+      "breakpoints": true
     }
   ]
 }
