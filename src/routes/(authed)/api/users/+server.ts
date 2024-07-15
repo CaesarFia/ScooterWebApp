@@ -1,4 +1,4 @@
-import { users } from "$lib/db/schema"
+import { customers, employees, users } from "$lib/db/schema"
 import db from "$lib/db"
 import { generateIdFromEntropySize } from "lucia";
 import { json, error } from "@sveltejs/kit";
@@ -11,10 +11,10 @@ export const GET = async function ({ locals }) {
     if (!user) 
         error(403, "You must be logged in to access this resource.");
 
-    const userData = user.isAdmin != null 
-        ? await db.select().from(users)
-        : await db.select().from(users).where(sql`(${user.email} === ${users.email})`)
-    return userData ? json(userData) : json({ success: false })
+    const userData = user.role === "customer"
+        ? await db.select().from(users).where(eq(users.id, user.id))
+        : await db.select().from(users)
+    return userData ? json(userData[0]) : error(404, "User not found.")
 }
 
 export const POST = async function ({ request, locals }) {
@@ -25,8 +25,6 @@ export const POST = async function ({ request, locals }) {
     const { firstname, lastname, email, passwordHash, isAdmin } = await request.json()
     const id = generateIdFromEntropySize(10)
 
-    const newsAdmin = user.isAdmin ? isAdmin : null
-    const credit = isAdmin===null ? 0 : null
     await db.insert(users).values({
         id,
         firstname,
@@ -35,7 +33,13 @@ export const POST = async function ({ request, locals }) {
         passwordHash
     })
 
-    return json({ id, isAdmin })
+    if (isAdmin !== null && isAdmin !== undefined) {
+        await db.insert(employees).values({ id, isAdmin });
+    } else {
+        await db.insert(customers).values({ id, balance: "0" });
+    }
+
+    return json({ id })
 }
 export const DELETE = async ({ request, locals }) => {
 	const { user } = locals;
@@ -44,6 +48,6 @@ export const DELETE = async ({ request, locals }) => {
 
     const { userId } = await request.json();
 
-    await db.delete(users).where(eq(users.id,userId));
+    await db.delete(users).where(eq(users.id, userId));
     return json({ success: true });
 };
