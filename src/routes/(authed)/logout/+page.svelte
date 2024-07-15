@@ -1,0 +1,1 @@
+<!-- This page is here just to make sure the route exists -->
