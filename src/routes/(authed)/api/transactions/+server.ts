@@ -1,13 +1,13 @@
 import db from "$lib/db"
 import { transactions } from "$lib/db/schema"
 import { generateIdFromEntropySize } from "lucia";
-import { json } from "@sveltejs/kit";
+import { error, json } from "@sveltejs/kit";
 import { sql, eq } from "drizzle-orm";
-import { lucia } from "$lib/server/auth";
 
 export const GET = async function ({ locals }) {
     const { user } = locals;
-    if (!user) return json({ success: false })
+    if (!user)
+        error(403, "You must be logged in to access this resource.");
 
     const history = user.isAdmin===null  && user.id
         ? await db.select().from(transactions).where(eq(transactions.customerId, user.id)) 
@@ -16,9 +16,10 @@ export const GET = async function ({ locals }) {
 }
 export const POST = async function ({ request, locals }) {
     const { user } = locals;
+    if (!user || user.role === "customer")
+        error(403, "Porbidden.");
+
     const {customerId, scooterId} = await request.json()
-    if (!user) return json({ success: false })
-    if (user.isAdmin === null) return json({ success: false })
     
     const id = generateIdFromEntropySize(10)
     const employeeId = user.id;
@@ -34,12 +35,10 @@ export const POST = async function ({ request, locals }) {
 
 export const PATCH = async ({ request, locals }) => {
     const { user } = locals;
+    if (!user || user.role === "customer")
+        error(403, "Porbidden.");
+
     const { amount, transactionId } = await request.json()
-
-    if(!user) return json({ success: false })
-
-
-    if(user.isAdmin===null) return json({ success: false })
     
     await db.update(transactions).set({ amount, checkOutTime: sql`now()` }).where(eq(transactions.id, transactionId))
 
@@ -48,12 +47,10 @@ export const PATCH = async ({ request, locals }) => {
 
 export const DELETE = async ({ request, locals }) => {
     const { user } = locals;
+    if (!user || user.role === "customer")
+        error(403, "Porbidden.");
+
     const { transactionId } = await request.json();
-
-    if(!user) return json({ success: false })
-
-
-    if (user.isAdmin === null) return json({ success: false });
 
     await db.delete(transactions).where(eq(transactions.id, transactionId));
     return json({ success: true });
