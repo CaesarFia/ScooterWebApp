@@ -2,10 +2,9 @@ import { customers, employees, users } from "$lib/db/schema"
 import db from "$lib/db"
 import { generateIdFromEntropySize } from "lucia";
 import { json, error } from "@sveltejs/kit";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 // Maybe add filterSchema for safety
-
 export const GET = async function ({ locals }) {
 	const { user } = locals;
     if (!user) 
@@ -14,6 +13,7 @@ export const GET = async function ({ locals }) {
     const userData = user.role === "customer"
         ? await db.select().from(users).where(eq(users.id, user.id))
         : await db.select().from(users)
+
     return userData ? json(userData[0]) : error(404, "User not found.")
 }
 
