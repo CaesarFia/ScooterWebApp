@@ -1,0 +1,1 @@
+ALTER TABLE "transactions" ALTER COLUMN "check_in_time" SET DEFAULT now();
