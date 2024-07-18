@@ -30,12 +30,10 @@
 	  dispatch('close');
 	}
   
-	onMount(() => {
-	  console.log('Component mounted');
-	});
+
   </script>
-  <div class="LoginPopUp flex h-screen items-center justify-center z-10 backdrop-blur-sm transition:fade">
-	<div id="LoginPopUp" class="absolute flex  flex-col items-center justify-center bg-sidebar-dark-primary border border-emerald-200 rounded-xl w-96 transition:fly={{y:-500}}">
+  <div class="LoginPopUp flex h-screen items-center justify-center z-1000 backdrop-blur-sm transition:fade">
+	<div id="LoginPopUp" class="absolute flex z-1000 flex-col items-center justify-center bg-sidebar-dark-primary border border-emerald-200 rounded-xl w-96 transition:fly={{y:-500}}">
 		<div class="rounded-lg w-96">
 			<img src="src/lib/images/pasted-movie.png" alt="Zoom logo" class="relative flex justify-center w-14 mt-5 ml-40 h-8 items-center"/>
 			<div class="flex justify-around mb-4">
