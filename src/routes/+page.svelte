@@ -49,7 +49,9 @@
         </div>
         <div class="w-1/3  border-b-2 border-emerald-200 transition-all duration-300" style="transform: translateX({activeTab === 'signup' ? '75%' : '-75%'});"></div>
         
-        <div class="error"> {message} </div>
+        {#if message}
+          <div class="error">{message}</div>
+        {/if}
         <!-- Sign In Form -->
         {#if activeTab === 'signin'}
         <form method="POST" action="?/signin">
@@ -88,6 +90,12 @@
               </svg>
             </span>
             <input type="email" name="email" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-emerald-300 dark:focus:border-blue-300 focus:ring-emerald-200 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Email address">
+          </div>
+          <div class="relative flex items-center mt-6">
+            <input type="text" name="firstname" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-emerald-300 dark:focus:border-blue-300 focus:ring-emerald-200 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="First name">
+          </div>
+          <div class="relative flex items-center mt-6">
+            <input type="text" name="lastname" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-emerald-300 dark:focus:border-blue-300 focus:ring-emerald-200 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Last name">
           </div>
           <div class="relative flex items-center mt-4">
             <span class="absolute">

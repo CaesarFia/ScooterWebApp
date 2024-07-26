@@ -1,8 +1,10 @@
 import { lucia } from "$lib/server/auth";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
-import { verify } from "@node-rs/argon2";
+import { verify, hash } from "@node-rs/argon2";
 import db from "$lib/db";
 import { isValidEmail, isValidPassword } from "$lib/utils";
+import { generateIdFromEntropySize } from "lucia";
+import { users } from "$lib/db/schema";
 
 
 export const load = async ({ locals }) => {
@@ -16,15 +18,15 @@ export const load = async ({ locals }) => {
 export const actions: Actions = {
 	signin: async (event) => {
 		const formData = await event.request.formData();
-		const email = formData.get("email")
-		const password = formData.get("password");
+		const email = formData.get("email")?.valueOf()
+		const password = formData.get("password")?.valueOf();
 
-		if (!isValidEmail(email)) {
+		if (typeof email !== 'string' || !isValidEmail(email)) {
 			return fail(400, {
 				message: "Invalid email"
 			});
 		}
-		if (!isValidPassword(password)) {
+		if (typeof password !== 'string' || !isValidPassword(password)) {
 			return fail(400, {
 				message: "Invalid password"
 			});
@@ -86,7 +88,7 @@ export const actions: Actions = {
 				message: "Invalid email"
 			});
 		}
-		if (typeof password !== "string" || password.length < 6 || password.length > 255) {
+		if (typeof password !== "string" || !isValidPassword(password)) {
 			return fail(400, {
 				message: "Invalid password"
 			});
@@ -105,15 +107,14 @@ export const actions: Actions = {
 			parallelism: 1
 		});
 		
-		// TODO: check if username is already used
 		await db.insert(users).values({
 			id: userId,
 			firstname: firstname,
             lastname: lastname,
             email: email,
 			passwordHash: passwordHash,
-			isAdmin: true
 		});
+
 
 		const session = await lucia.createSession(userId, {});
 		const sessionCookie = lucia.createSessionCookie(session.id);

@@ -1,8 +1,8 @@
-export function isValidEmail(email: unknown): boolean {
-	return typeof email == "string" && /.+@.+/.test(email);
+export function isValidEmail(email: string): boolean {
+	return /.+@.+/.test(email);
 }
 
 
-export function isValidPassword(password: unknown): boolean {
-	return typeof password == "string" && password.length >= 6 && password.length <= 255;
+export function isValidPassword(password: string): boolean {
+	return password.length >= 6 && password.length <= 255;
 }
