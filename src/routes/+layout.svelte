@@ -1,4 +1,4 @@
 <script>
-    import "../app.css"
+    import "$lib/css/app.css"
 </script>
 <slot />
