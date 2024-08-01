@@ -1,16 +1,18 @@
 <script>
 	/** @type {import('./$types').PageData} */
 	export let data;
+
+	let isEmployee = false;
 </script>
 
 <h1>Sign up</h1>
 <div class="make scooter">
 	<form action="?/make_scooter" method="POST">
 		<label for="latitude">Latitude</label>
-		<input type="text" name="latitude" id="latitude" required /><br />
+		<input type="number" name="latitude" id="latitude" required /><br />
 
 		<label for="longitude">Longitude</label>
-		<input type="text" name="longitude" id="longitude" required /><br />
+		<input type="number" name="longitude" id="longitude" required /><br />
 
 		<label for="checked_out">Checked Out</label>
 		<input type="checkbox" name="checked_out" id="checked_out" /><br />
@@ -20,9 +22,6 @@
 
 		<label for="battery">Battery (%)</label>
 		<input type="number" name="battery" id="battery" min="0" max="100" required /><br />
-
-		<label for="rentals">Rentals</label>
-		<input type="number" name="rentals" id="rentals" min="0" required /><br />
 
 		<button>Submit</button>
 	</form>
@@ -39,11 +38,16 @@
 		<label for="email">Email</label>
 		<input type="text" name="email" id="email" required /><br />
 
-		<label for="is_admin">Is Admin</label>
-		<input type="checkbox" name="is_admin" id="is_admin" /><br />
+		<label for="is_employee">Is Employee?</label>
+		<input type="checkbox" name="is_employee" id="is_employee" bind:value={isEmployee}/><br />
+
+		{#if isEmployee}
+			<label for="is_admin">Is Admin?</label>
+			<input type="checkbox" name="is_admin" id="is_admin" /><br />
+		{/if}
 
 		<label for="password">Password</label>
-		<input type="password" name="password" id="password" /><br />
+		<input type="password" name="password" id="password" required/><br />
 
 		<button>Submit</button>
 	</form>
@@ -65,8 +69,8 @@
 				<tr>
 					<td>{scooter.latitude}</td>
 					<td>{scooter.longitude}</td>
-					<td>{scooter.checked_out ? 'Yes' : 'No'}</td>
-					<td>{scooter.need_repairs ? 'Yes' : 'No'}</td>
+					<td>{scooter.checkedOut ? 'Yes' : 'No'}</td>
+					<td>{scooter.needRepairs ? 'Yes' : 'No'}</td>
 					<td>{scooter.battery}</td>
 				</tr>
 			{/each}
