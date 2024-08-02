@@ -12,6 +12,9 @@
 			class="relative flex flex-col flex-grow rtl space-y-10 bg-side font-sans font-bold text-lg tracking-wide mt-4 p-7 h-screen rounded-xl list-none text-left text-sidebar-light-secondary"
 		>
 			<li class="p-1 box-border h-8 shadow-md hover:text-sidebar-light-primary">
+				<a href="/">Map</a>
+			</li>
+			<li class="p-1 box-border h-8 shadow-md hover:text-sidebar-light-primary">
 				<a href="/balance">Balance</a>
 			</li>
 			<li class="p-1 box-border h-8 shadow-md hover:text-sidebar-light-primary">
