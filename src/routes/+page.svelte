@@ -23,6 +23,9 @@
   }
   
   const { user } = data;
+  console.log(user)
+
+  let isEmployee = user.isAdmin;
 </script>
 
 <main>
@@ -124,7 +127,7 @@
       </div>
     </div>
   {:else}
-  <Sidebar />
+  <Sidebar {isEmployee} />
   <ProfileCircle />
   {/if}
 </main>
