@@ -110,7 +110,7 @@ export async function load({ locals }) {
 	const scooterList = await db.select().from(scooters);
 	const userList = await db.select().from(users);
 	const transactionList = await db.select().from(transactions);
-	let currentUser = locals.user;
+	const currentUser = locals.user;
 
 	return {
 		data: {
