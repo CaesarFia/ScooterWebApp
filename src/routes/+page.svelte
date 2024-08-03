@@ -25,7 +25,7 @@
 	const { user } = data;
 	console.log(user);
 
-	let isEmployee = user.isAdmin;
+	let isEmployee = user?.isAdmin;
 </script>
 
 <main>

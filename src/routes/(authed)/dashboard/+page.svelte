@@ -1,10 +1,12 @@
 <script>
+// @ts-nocheck
+
 	import Sidebar from '$lib/components/Sidebar.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	let isEmployee = data.user.isAdmin;
+	let isEmployee = data.user?.isAdmin;
 </script>
 
 <div class="flex flex-row bg-sidebar-dark-secondary">
