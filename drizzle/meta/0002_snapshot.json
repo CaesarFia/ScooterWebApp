@@ -1,6 +1,6 @@
 {
-  "id": "09a4e0f4-8b9d-496c-ae99-95fee1b63775",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "31c243ec-b654-4037-9e8a-a70941802073",
+  "prevId": "44c81677-82e5-42d0-870d-675edaee7a8f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -98,7 +98,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
@@ -130,7 +130,8 @@
           "name": "check_in_time",
           "type": "date",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "now()"
         },
         "check_out_time": {
           "name": "check_out_time",
