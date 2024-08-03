@@ -46,14 +46,13 @@ export const actions: Actions = {
 			parallelism: 1
 		});
 		
-		// TODO: check if username is already used
+		// TODO: check if email is already used
 		await db.insert(users).values({
 			id: userId,
 			firstname: firstname,
             lastname: lastname,
             email: email,
-			passwordHash: passwordHash,
-			isAdmin: true
+			passwordHash: passwordHash
 		});
 
 		const session = await lucia.createSession(userId, {});
