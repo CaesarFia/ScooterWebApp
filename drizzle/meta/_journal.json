@@ -50,6 +50,13 @@
       "when": 1722777427046,
       "tag": "0006_redundant_wild_child",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1722798542704,
+      "tag": "0007_shocking_silver_centurion",
+      "breakpoints": true
     }
   ]
 }
