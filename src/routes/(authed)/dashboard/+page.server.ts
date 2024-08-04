@@ -34,15 +34,16 @@ export const actions: Actions = {
 			});
 		}
 
-		const scooterId = generateIdFromEntropySize(10); // 16 characters long
-
 		await db.insert(scooters).values({
-			id: scooterId,
 			latitude: latitude,
 			longitude: longitude,
 			checkedOut: checkedOut,
 			needRepairs: needRepairs,
-			battery: battery
+			battery: battery,
+			model: "test",
+			timesUsed: 0,
+			mileage: 0,
+			yearPurchased: new Date()
 		});
 	},
 
