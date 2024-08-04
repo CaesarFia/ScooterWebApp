@@ -22,7 +22,7 @@ export const POST = async function ({ request, locals }) {
     if (!user || user.role === "customer")
         error(403, "Porbidden.");
 
-    const { firstname, lastname, email, passwordHash, isAdmin } = await request.json()
+    const { firstname, lastname, email, passwordHash, role } = await request.json()
     const id = generateIdFromEntropySize(10)
 
     await db.insert(users).values({
@@ -32,11 +32,16 @@ export const POST = async function ({ request, locals }) {
         email,
         passwordHash
     })
-
-    if (isAdmin !== null && isAdmin !== undefined) {
-        await db.insert(employees).values({ id, isAdmin });
-    } else {
-        await db.insert(customers).values({ id, balance: "0" });
+    switch (role) {
+        case "customer":
+            await db.insert(customers).values({ id, balance: "0" });
+            break
+        case "employee":
+            await db.insert(employees).values({ id, isAdmin: false })
+            break
+        case "admin":
+            await db.insert(employees).values({ id, isAdmin: true })
+            break
     }
 
     return json({ id })

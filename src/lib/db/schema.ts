@@ -1,5 +1,31 @@
 import { relations } from "drizzle-orm";
-import { text, integer, real, numeric, pgTable, boolean, timestamp, pgView } from "drizzle-orm/pg-core";
+import { text, integer, serial, numeric, pgTable, boolean, timestamp, pgView, date } from "drizzle-orm/pg-core";
+
+export type Location = {
+  name: string,
+  latitude: number,
+  longitude: number
+}
+
+const locations: Location[] = [
+  {name: "Malachowsky", latitude: 29.644323, longitude: -82.347999},
+  {name: "Hume Hall", latitude: 29.644780, longitude: -82.351581},
+  {name: "Turlington", latitude: 29.649078, longitude: -82.343826},
+  {name: "Carelton Auditorium", latitude: 29.649027, longitude: -82.341442},
+  {name: "Reitz Union", latitude: 29.646710, longitude: -82.347624},
+  {name: "Flavet Field", latitude: 29.647132, longitude: -82.353396},
+  {name: "O'Connell Center", latitude: 29.649447, longitude: -82.350279},
+  {name: "Shands", latitude: 29.639535, longitude: -82.343739},
+  {name: "Broward Hall", latitude: 29.646864, longitude: 82.342221},
+  {name: "Gator Corner", latitude: 29.648277, longitude: -82.350027},
+  {name: "Campus cravings", latitude: 29.650039, longitude: -82.346129}
+]
+
+export enum UserType {
+  Customer= "customer",
+  Employee= "employee",
+  Admin= "admin"
+}
 
 export const sessionTable = pgTable("session", {
 	id: text("id").primaryKey(),
@@ -25,7 +51,7 @@ export const users = pgTable("users", {
 export const customers = pgTable("customers", {
   id: text("id").primaryKey().references(() => users.id, {onDelete: "cascade"}).notNull(),
   // Use numeric for currency values
-  balance: numeric("balance", { precision: 1000, scale: 2 }).notNull(),
+  balance: numeric("balance", { precision: 10, scale: 2 }).notNull(),
 });
 
 
@@ -37,9 +63,13 @@ export const employees = pgTable("employees", {
 
 
 export const  scooters = pgTable("scooters", {
-  id: text("id").primaryKey().notNull(),
-  latitude: real("latitude").notNull(),
-  longitude: real("longitude").notNull(),
+  id: serial("id").primaryKey().notNull(),
+  latitude: numeric("latitude", {precision: 9, scale: 6}).notNull(), // TODO: Change to numeric for more precision?
+  longitude: numeric("longitude", {precision: 9, scale: 6}).notNull(),
+  model: text("model").notNull(),
+  yearPurchased: date("year_purchased").notNull(),
+  timesUsed: numeric("times_used", {precision: 4, scale: 0}).notNull(),
+  mileage: numeric("mileage", {precision: 9, scale: 2}).notNull(),
   checkedOut: boolean("checked_out").notNull(),
   needRepairs: boolean("need_repairs").notNull(),
   battery: integer("battery").notNull()
@@ -52,7 +82,7 @@ export const transactions = pgTable("transactions", {
   customerId: text("customer_id").references(() => customers.id).notNull(),
   // If an employee is involved, store their ID
   employeeId: text("employee_id").references(() => employees.id),
-  amount: numeric("amount", { precision: 1000, scale: 2 }).notNull(),
+  amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
 })
 
 
@@ -61,8 +91,10 @@ export const rentals = pgTable("rentals", {
   id: text("id").primaryKey().notNull(),
   customerId: text("customer_id").references(() => customers.id).notNull(),
   scooterId: text("scooter_id").references(() => scooters.id).notNull(),
-  // When an employee approves a rental, store their ID
-  approverId: text("approver_id").references(() => employees.id),
+  // When an employee approves a rental checkOut, store their ID
+  approveOutId: text("approver_out_id").references(() => employees.id),
+  // When an employee approves a rental checkIn, store their ID
+  approveInId: text("approver_in_id").references(() => employees.id),
   // When the scooter is returned and paid, store the transaction ID
   transactionId: text("transaction_id").references(() => transactions.id),
   startTime: timestamp("start_time", {
@@ -117,7 +149,8 @@ export const employeeRelations = relations(employees, ({ one, many }) => ({
     references: [users.id],
   }),
   manualTransactions: many(transactions),
-  approvedRentals: many(rentals),
+  approvedOutRentals: many(rentals),
+  approvedInRentals: many(rentals),
 }))
 
 
@@ -149,8 +182,12 @@ export const rentalsRelations = relations(rentals, ({ one }) => ({
     fields: [rentals.scooterId],
     references: [scooters.id],
   }),
-  approver: one(employees, {
-    fields: [rentals.approverId],
+  approveOut: one(employees, {
+    fields: [rentals.approveOutId],
+    references: [employees.id],
+  }),
+  approveIn: one(employees, {
+    fields: [rentals.approveInId],
     references: [employees.id],
   }),
   transaction: one(transactions, {
@@ -170,7 +207,7 @@ export const usersInfo = pgView("users_info", {
   lastname: text("lastname").notNull(),
   email: text("email").unique().notNull(),
   passwordHash: text("password_hash").notNull(),
-  balance: numeric("balance", { precision: 1000, scale: 2 }),
+  balance: numeric("balance", { precision: 10, scale: 2 }),
   isAdmin: boolean("is_admin"),
 }).existing();
 

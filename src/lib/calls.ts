@@ -1,3 +1,5 @@
+import type { UserType } from "./db/schema";
+
 const APIS = '/api/scooters'
 const APIT = '/api/transactions'
 const APIU = '/api/users'
@@ -89,14 +91,14 @@ export async function updateScooter(scooterId: string, latitude: number | null, 
     }
 }
 
-export async function addUser(firstname: string, lastname: string, email: string, passwordHash: string, isAdmin: boolean | null) {
+export async function addUser(firstname: string, lastname: string, email: string, passwordHash: string, role: UserType) {
     try {
         const response = await fetch(APIU, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ firstname, lastname, email, passwordHash, isAdmin })
+            body: JSON.stringify({ firstname, lastname, email, passwordHash, role })
         });
 
         if (!response.ok) {
