@@ -10,12 +10,10 @@ import type { PageServerLoad } from "../$types";
 
 export const load: PageServerLoad = async (event) => {
     // TODO: Make the login page redirect back to the page the user was trying to access
-	if (!event.locals.user) redirect(302, "/login");
+    if (!event.locals.user) redirect(302, "/");
     
-    const user = await event.locals.user;
+    const user = event.locals.user;
 	return {
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
+        user
     }
 };

@@ -5,7 +5,7 @@ import { lucia } from "$lib/server/auth";
 export const actions: Actions = {
 	default: async (event) => {
 		if (!event.locals.session) {
-			redirect(302, "/login");
+			redirect(302, "/");
 		}
 		await lucia.invalidateSession(event.locals.session.id);
 		const sessionCookie = lucia.createBlankSessionCookie();
@@ -15,6 +15,6 @@ export const actions: Actions = {
 		});
 		event.locals.session = null;
 		event.locals.user = null;
-		redirect(302, "/login");
+		redirect(302, "/");
 	}
 };
