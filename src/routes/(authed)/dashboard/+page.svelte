@@ -2,9 +2,21 @@
 // @ts-nocheck
 
 	import Sidebar from '$lib/components/Sidebar.svelte';
+	import { locations } from '$lib/db/schema';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
+
+
+	let selectedLocation = locations[0];
+	let latitude = selectedLocation.latitude;
+	let longitude = selectedLocation.longitude;
+
+	function handleLocationChange(event) {
+		const location = JSON.parse(event.target.value);
+		latitude = location.latitude;
+		longitude = location.longitude;
+	}
 
 	let isEmployee = data.user?.isAdmin;
 </script>
@@ -19,11 +31,22 @@
 			<div class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10" id="make_scooter">
 				<form class="space-y-3" action="?/make_scooter" method="POST">
 					<h2 class="text-xl font-bold text-tc">Add Scooter</h2>
+					<select id="location" class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm" on:change={handleLocationChange}>
+						{#each locations as location}
+							<option value={JSON.stringify({ latitude: location.latitude, longitude: location.longitude })}>
+								{location.name}
+							</option>
+						{/each}
+					</select><br />
 					<label class="block text-tc text-sm font-medium mb-2" for="latitude">Latitude</label>
 					<input
 						class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
 						type="number"
 						name="latitude"
+						min="-180"
+						max="180"
+						bind:value={latitude}
+						step=".000001"
 						id="latitude"
 						required
 					/><br />
@@ -33,6 +56,10 @@
 						class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
 						type="number"
 						name="longitude"
+						min="-180"
+						max="180"
+						step=".000001"
+						bind:value={longitude}
 						id="longitude"
 						required
 					/><br />
