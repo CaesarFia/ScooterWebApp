@@ -12,22 +12,9 @@
       container: 'map',
       style: 'mapbox://styles/caesarfia/clxzna0zz006q01p80zkl9v03'
     });
-
   });
   </script>
-  
-  <style>
-    .overlay {
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      transform: translate(-50%, -20%);
-      z-index: 1;
-    }
-  </style>
-  
-  <div id="map" class="absolute h-screen z-0 w-screen m-0 p-0"></div>
-  <div class="overlay">
-    <slot></slot>
+    
+  <div id="map" class="absolute h-screen z-0 w-screen m-0 p-0">
   </div>
   

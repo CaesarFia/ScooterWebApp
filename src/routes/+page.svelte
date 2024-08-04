@@ -32,11 +32,11 @@
 	<Map />
 	{#if !user}
 		<div
-			class="LoginPopUp flex h-screen items-center justify-center z-10 backdrop-blur-sm transition:fade"
+			class="LoginPopUp flex h-screen items-center justify-center z-1000 backdrop-blur-sm transition:fade"
 		>
 			<div
 				id="LoginPopUp"
-				class="absolute flex flex-col items-center justify-center bg-sidebar-dark-primary border border-emerald-200 rounded-xl w-96 transition:fly={{
+				class="absolute flex z-1000 flex-col items-center justify-center bg-sidebar-dark-primary border border-emerald-200 rounded-xl w-96 transition:fly={{
 					y: -500
 				}}"
 			>
