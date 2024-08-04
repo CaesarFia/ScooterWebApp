@@ -8,15 +8,15 @@ import { rentals, scooters, transactions, users } from '$lib/db/schema';
 import { isValidEmail, isValidPassword } from '$lib/utils';
 
 export const actions: Actions = {
-    make_rental: async ({ locals }) => {
+    make_rental: async ({ request, locals }) => {
 
-        // information for transaction
-        const scooterId = "bzqvdmhliogxc3u2" // this will be a given scooter id
+        const formData = await request.formData();
+        const scooterId = formData.get('scooterId') as string;
         const rentalId = generateIdFromEntropySize(10); // 16 characters long
         const transactionId = generateIdFromEntropySize(10); // 16 characters long
         const now = new Date();
         const customerId = locals.user?.id;
-        const cost = "3";
+        const cost = 3;
         const customerBalance = locals.user?.balance;
 
         if (customerId == null) {
@@ -26,7 +26,8 @@ export const actions: Actions = {
         }
 
         // check balance
-        if (customerBalance == null || customerBalance < cost) {
+        if (customerBalance == null || customerBalance < (cost as float)) {
+            console.log(cost)
             error(400, {
                 message: "insufficient balance"
             })
@@ -54,11 +55,9 @@ export const actions: Actions = {
 
 };
 
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ locals }) {
-    if (!locals.user || !locals.user.isAdmin) {
-        error(403, { message: 'Forbidden' });
-    }
 
     const scooterList = await db.select().from(scooters);
     const userList = await db.select().from(users);
