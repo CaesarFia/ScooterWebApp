@@ -5,8 +5,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        'background': '#50735a',
-        'sidebar-dark-primary': '###02ffb20d',
+        'background': '#58FF33',
+        'opal': '#02ffb20d',
         'sidebar-dark-secondary': '#2c3e50',
         'sidebar-light-primary': '#f5f6fa',
         'sidebar-light-secondary': '#8392a5',

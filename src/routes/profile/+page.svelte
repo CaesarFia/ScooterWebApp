@@ -1,3 +1,35 @@
-<div class="bg-emerald-400 h-screen w-screen justify-center items-center">
-
+<div id="page" class="h-screen bg-background">
+  <div id="header" class="relative flex h-16 w-screen flex-row items-center justify-between rounded-b-xl border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">
+    <button class="relative ml-1 flex rounded-full bg-background p-1">
+      <img src="" alt="back arrow img" />
+    </button>
+    <div class="text-2xl font-bold">Profile</div>
+    <div id="Profile Link" class="mr-0">
+      <a href="/profile" class="relative flex">
+        <div class="rounded-l-lg border border-gray-600 bg-background text-gray-900">
+          <img src="" alt="generic profile img" />
+        </div>
+        <div class="mr-1 rounded-r-lg border border-gray-600 bg-background p-1 text-gray-900">{username}</div>
+      </a>
+    </div>
+  </div>
+  <div id="body" class="relative flex h-full w-full flex-row items-center justify-start space-y-10 overflow-scroll scroll-auto bg-inherit">
+    <div class="h-full w-1/3">
+      <div id="profile circle" class="relative flex w-48 h-48 rounded-full border-4 border-gray-900 mt-11 ml-3 bg-white justify-center items-center">
+        <img src="" alt="generic profile pic"/>
+      </div>
+    </div>
+    <div class="bg-inherit h-screen w-2/3">
+      <div class="font-extrabold text-2xl" >
+        <div class="text-slate-50 text-5xl">Hello,</div>
+        <div class="">{firstName} {lastName}!</div>
+        <div class="mt-5">Email:</div>
+        <div class="">{Email}</div>
+        <div class="mt-5">Date Created:</div>
+        <div class="">{Date}</div>
+      </div>
+      <button class="absolute bottom-0 mb-20 ml-24 rounded-2xl border bg-white pb-5 pl-9 pr-9 pt-5 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 ">Edit</button>
+      <button class="absolute bottom-0 mb-20 ml-56 rounded-2xl border bg-white pb-5 pl-9 pr-9 pt-5 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 ">Save</button>
+    </div>
+  </div>
 </div>

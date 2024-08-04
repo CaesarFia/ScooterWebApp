@@ -5,19 +5,10 @@
           <a href="/balance">Balance</a>
         </li>
         <li class="p-1 box-border h-8 shadow-md hover:text-sidebar-light-primary">
-          <a href="/banking">Banking</a>
-        </li>
-        <li class="p-1 box-border h-8 shadow-md hover:text-sidebar-light-primary">
-          <a href="/vehicles">Vehicles</a>
-        </li>
-        <li class="p-1 box-border h-8 shadow-md hover:text-sidebar-light-primary">
           <a href="/locations">Locations</a>
         </li>
         <li class="p-1 box-border h-8 shadow-md hover:text-sidebar-light-primary">
           <a href="/history">History</a>
-        </li>
-        <li class="p-1 box-border h-8 shadow-md hover:text-sidebar-light-primary">
-          <a href="/help">Help</a>
         </li>
       </div>
      <hr class=" relative left-6 w-36 border-sidebar-dark-secondary">
