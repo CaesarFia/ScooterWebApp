@@ -43,6 +43,13 @@
       "when": 1720882391112,
       "tag": "0005_premium_stone_men",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1722797968443,
+      "tag": "0006_cold_chimera",
+      "breakpoints": true
     }
   ]
 }

@@ -37,9 +37,12 @@ export const employees = pgTable("employees", {
 
 
 export const  scooters = pgTable("scooters", {
-  id: text("id").primaryKey().notNull(),
+  id: text("id").unique().primaryKey().notNull(),
+  number: integer("number").unique().notNull(),
   latitude: real("latitude").notNull(),
   longitude: real("longitude").notNull(),
+  make: text("make").notNull(),
+  yearOfPurchase: integer("year_of_purchase").notNull(),
   checkedOut: boolean("checked_out").notNull(),
   needRepairs: boolean("need_repairs").notNull(),
   battery: integer("battery").notNull()
