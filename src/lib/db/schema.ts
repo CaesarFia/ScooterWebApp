@@ -91,10 +91,8 @@ export const rentals = pgTable("rentals", {
   id: text("id").primaryKey().notNull(),
   customerId: text("customer_id").references(() => customers.id).notNull(),
   scooterId: integer("scooter_id").references(() => scooters.number).notNull(),
-  // When an employee approves a rental checkOut, store their ID
-  approveOutId: text("approver_out_id").references(() => employees.id),
-  // When an employee approves a rental checkIn, store their ID
-  approveInId: text("approver_in_id").references(() => employees.id),
+  // When an employee approves a rental return, store their ID
+  approveId: text("approver_id").references(() => employees.id),
   // When the scooter is returned and paid, store the transaction ID
   transactionId: text("transaction_id").references(() => transactions.id),
   startTime: timestamp("start_time", {
@@ -182,12 +180,8 @@ export const rentalsRelations = relations(rentals, ({ one }) => ({
     fields: [rentals.scooterId],
     references: [scooters.number],
   }),
-  approveOut: one(employees, {
-    fields: [rentals.approveOutId],
-    references: [employees.id],
-  }),
-  approveIn: one(employees, {
-    fields: [rentals.approveInId],
+  approve: one(employees, {
+    fields: [rentals.approveId],
     references: [employees.id],
   }),
   transaction: one(transactions, {
