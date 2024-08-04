@@ -57,6 +57,13 @@
       "when": 1722798542704,
       "tag": "0007_shocking_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1722799213726,
+      "tag": "0008_damp_shooting_star",
+      "breakpoints": true
     }
   ]
 }

@@ -68,8 +68,6 @@ export const  scooters = pgTable("scooters", {
   longitude: numeric("longitude", {precision: 9, scale: 6}).notNull(),
   model: text("model").notNull(),
   yearPurchased: date("year_purchased").notNull(),
-  timesUsed: numeric("times_used", {precision: 4, scale: 0}).notNull(),
-  mileage: numeric("mileage", {precision: 9, scale: 2}).notNull(),
   checkedOut: boolean("checked_out").notNull(),
   needRepairs: boolean("need_repairs").notNull(),
   battery: integer("battery").notNull()
@@ -95,6 +93,7 @@ export const rentals = pgTable("rentals", {
   approveId: text("approver_id").references(() => employees.id),
   // When the scooter is returned and paid, store the transaction ID
   transactionId: text("transaction_id").references(() => transactions.id),
+  mileage: numeric("mileage", {precision: 9, scale: 2}).notNull(),
   startTime: timestamp("start_time", {
     withTimezone: true,
     mode: "date"
