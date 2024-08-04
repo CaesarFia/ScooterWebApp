@@ -43,6 +43,34 @@
       "when": 1720882391112,
       "tag": "0005_premium_stone_men",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1722800244146,
+      "tag": "0006_unique_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1722801192370,
+      "tag": "0007_mighty_silhouette",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1722801420746,
+      "tag": "0008_mute_black_panther",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1722801471361,
+      "tag": "0009_early_newton_destine",
+      "breakpoints": true
     }
   ]
 }
