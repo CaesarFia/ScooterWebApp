@@ -34,7 +34,7 @@ FROM
 ;
 
 INSERT INTO users (id, firstname, lastname, email, password_hash) 
-VALUES ('ukeku7fowg6n36um', 'firstname', 'User', 'vroomDev@gmail.com', '$argon2id$v=19$m=19456,t=2,p=1$aexKcHGhPoSbqX2V7WsFqQ$d7b+WqPVATcianB+u/ywXeWUmHIIWzzGWizP4/LqehI'); -- HACK: replace w/ environment vars
+VALUES ('ukeku7fowg6n36um', 'admin', 'User', 'vroomDev@gmail.com', '$argon2id$v=19$m=19456,t=2,p=1$aexKcHGhPoSbqX2V7WsFqQ$d7b+WqPVATcianB+u/ywXeWUmHIIWzzGWizP4/LqehI'); -- HACK: replace w/ environment vars
 
 INSERT INTO employees (id, is_admin) 
 VALUES ((SELECT id from users WHERE email='vroomDev@gmail.com') , 'true');

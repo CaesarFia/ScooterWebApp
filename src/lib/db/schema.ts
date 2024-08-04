@@ -7,7 +7,7 @@ export type Location = {
   longitude: number
 }
 
-const locations: Location[] = [
+export const locations: Location[] = [
   {name: "Malachowsky", latitude: 29.644323, longitude: -82.347999},
   {name: "Hume Hall", latitude: 29.644780, longitude: -82.351581},
   {name: "Turlington", latitude: 29.649078, longitude: -82.343826},
@@ -63,7 +63,7 @@ export const employees = pgTable("employees", {
 
 
 export const  scooters = pgTable("scooters", {
-  id: serial("id").primaryKey().notNull(),
+  number: serial("number").primaryKey().notNull(),
   latitude: numeric("latitude", {precision: 9, scale: 6}).notNull(), // TODO: Change to numeric for more precision?
   longitude: numeric("longitude", {precision: 9, scale: 6}).notNull(),
   model: text("model").notNull(),
@@ -90,7 +90,7 @@ export const transactions = pgTable("transactions", {
 export const rentals = pgTable("rentals", {
   id: text("id").primaryKey().notNull(),
   customerId: text("customer_id").references(() => customers.id).notNull(),
-  scooterId: text("scooter_id").references(() => scooters.id).notNull(),
+  scooterId: integer("scooter_id").references(() => scooters.number).notNull(),
   // When an employee approves a rental checkOut, store their ID
   approveOutId: text("approver_out_id").references(() => employees.id),
   // When an employee approves a rental checkIn, store their ID
@@ -180,7 +180,7 @@ export const rentalsRelations = relations(rentals, ({ one }) => ({
   }),
   scooter: one(scooters, {
     fields: [rentals.scooterId],
-    references: [scooters.id],
+    references: [scooters.number],
   }),
   approveOut: one(employees, {
     fields: [rentals.approveOutId],
