@@ -282,7 +282,10 @@
 									<td>{rental.mileage}</td>
 									<td>{rental.startTime}</td>
 									<td>{rental.endTime}</td>
-									<td class="bg-charcoal">butt</td>
+									<td class="bg-charcoal"><button on:click={"?/approve_rental"}
+										class="w-full px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80"
+										>Approve</button
+									></td>
 								</tr>
 							{/each}
 						</tbody>
