@@ -4,7 +4,7 @@ import { verify, hash } from "@node-rs/argon2";
 import db from "$lib/db";
 import { isValidEmail, isValidPassword } from "$lib/utils";
 import { generateIdFromEntropySize } from "lucia";
-import { scooters, users } from "$lib/db/schema";
+import { users } from "$lib/db/schema";
 
 
 export const load = async ({ locals }) => {

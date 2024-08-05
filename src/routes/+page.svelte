@@ -26,10 +26,12 @@
 	console.log(user);
 
 	let isEmployee = user?.isAdmin;
+
+	let selectedScooter = "test";
 </script>
 
 <main>
-	<Map />
+	<Map bind:selectedScooter={selectedScooter} />
 	{#if !user}
 		<div
 			class="LoginPopUp flex h-screen items-center justify-center z-1000 backdrop-blur-sm transition:fade"
