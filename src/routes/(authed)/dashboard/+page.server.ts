@@ -5,8 +5,14 @@ import { generateIdFromEntropySize } from 'lucia';
 import db from '$lib/db';
 import { customers, employees, rentals, scooters, transactions, users } from '$lib/db/schema';
 import { isValidEmail, isValidPassword } from '$lib/utils';
+import { eq } from 'drizzle-orm';
 
 export const actions: Actions = {
+	approve_rental: async ({request, locals}) => {
+		const formData = await request.formData();
+		console.log(formData.get('id')?.toString());
+		await db.update(rentals).set({ approverId: locals.user?.id }).where(eq(rentals.id, formData.get('id')?.toString()))
+	},
 	make_scooter: async (event) => {
 		const formData = await event.request.formData();
 

@@ -283,10 +283,13 @@
 									<td>{rental.startTime}</td>
 									<td>{rental.endTime}</td>
 									{#if !rental.approverId}
-									<td class="bg-charcoal"> <button on:click={"?/approve_rental"}
+									<td class="bg-charcoal"> 
+										<form method="post" action="?/approve_rental">
+										<input type="hidden" name="id" bind:value={rental.id} />
+										<button type="submit"
 										class="w-full px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80"
 										>Approve</button
-									> </td>
+									></form></td>
 									{/if}
 								</tr>
 							{/each}
