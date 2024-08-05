@@ -4,12 +4,14 @@ import { verify, hash } from "@node-rs/argon2";
 import db from "$lib/db";
 import { isValidEmail, isValidPassword } from "$lib/utils";
 import { generateIdFromEntropySize } from "lucia";
-import { users } from "$lib/db/schema";
+import { scooters, users } from "$lib/db/schema";
 
 
 export const load = async ({ locals }) => {
+	
 	return {
 		user: locals.user,
+		scooters: db.select().from(scooters).execute()
 	}
 }
 

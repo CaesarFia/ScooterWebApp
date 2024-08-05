@@ -22,14 +22,14 @@
 		}
 	}
 
-	const { user } = data;
+	const { user, scooters } = data;
 	console.log(user);
 
 	let isEmployee = user?.isAdmin;
 </script>
 
 <main>
-	<Map />
+	<Map scooters={scooters}/>
 	{#if !user}
 		<div
 			class="LoginPopUp flex h-screen items-center justify-center z-1000 backdrop-blur-sm transition:fade"
