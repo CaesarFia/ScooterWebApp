@@ -1,9 +1,12 @@
-<script>
+<script lang="ts">
+	import Sidebar from '$lib/components/Sidebar.svelte';
 	/** @type {import('./$types').PageData} */
 	export let data;
+	let isEmployee = data.user?.isAdmin;
 </script>
 
 <div class="flex justify-center items-center min-h-screen bg-gray-900">
+	<Sidebar {isEmployee} />
 	<form
 		class="max-w-md mx-auto p-6 bg-gray-800 text-white rounded-lg shadow-md"
 		action="?/add_balance"

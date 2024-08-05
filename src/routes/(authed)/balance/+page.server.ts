@@ -35,10 +35,12 @@ export async function load({ locals }) {
     }
 
     const currentBalance = locals.user.balance;
+    const user = locals.user
 
     return {
         data: {
-            currentBalance
+            currentBalance,
+            user
         }
     };
 }
