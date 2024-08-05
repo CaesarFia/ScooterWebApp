@@ -1,24 +1,19 @@
-<script>
-	// @ts-nocheck
-
+<script lang="ts">
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import { locations } from '$lib/db/schema';
 
-	/** @type {import('./$types').PageData} */
 	export let data;
 
-
 	let selectedLocation = locations[0];
-	let latitude = selectedLocation.latitude;
-	let longitude = selectedLocation.longitude;
+	let latitude: number;
+	let longitude: number;
 
-	function handleLocationChange(event) {
-		const location = JSON.parse(event.target.value);
-		latitude = location.latitude;
-		longitude = location.longitude;
-	}
+	$: latitude = selectedLocation.latitude;
+	$: longitude = selectedLocation.longitude;
 
-	let isEmployee = data.user?.isAdmin;
+	const isEmployee = true;
+	
+	let isEmployeeChecked = false;
 </script>
 
 <div class="flex flex-row bg-gray-900">
@@ -31,9 +26,9 @@
 			<div class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10" id="make_scooter">
 				<form class="space-y-3" action="?/make_scooter" method="POST">
 					<h2 class="text-xl font-bold text-tc">Add Scooter</h2>
-					<select id="location" class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm" on:change={handleLocationChange}>
+					<select id="location" bind:value={selectedLocation} class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm">
 						{#each locations as location}
-							<option value={JSON.stringify({ latitude: location.latitude, longitude: location.longitude })}>
+							<option value={location}>
 								{location.name}
 							</option>
 						{/each}
@@ -71,7 +66,6 @@
 						class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
 						type="checkbox"
 						name="checked_out"
-						id="checked_out"
 					/><br />
 
 					<label class="block text-tc text-sm font-medium mb-2" for="need_repairs"
@@ -81,7 +75,6 @@
 						class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
 						type="checkbox"
 						name="need_repairs"
-						id="need_repairs"
 					/><br />
 
 					<label class="block text-tc text-sm font-medium mb-2" for="battery">Battery (%)</label>
@@ -89,7 +82,6 @@
 						class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
 						type="number"
 						name="battery"
-						id="battery"
 						min="0"
 						max="100"
 						required
@@ -140,10 +132,10 @@
 						type="checkbox"
 						name="is_employee"
 						id="is_employee"
-						bind:value={isEmployee}
+						bind:value={isEmployeeChecked}
 					/><br />
 
-					{#if isEmployee}
+					{#if isEmployeeChecked}
 						<label class="block text-tc text-sm font-medium mb-2" for="is_admin">Is Admin?</label>
 						<input
 							class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"

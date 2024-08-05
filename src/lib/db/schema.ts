@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { text, integer, serial, numeric, pgTable, boolean, timestamp, pgView, date } from "drizzle-orm/pg-core";
+import { text, integer, serial, numeric, pgTable, boolean, timestamp, pgView, date, real } from "drizzle-orm/pg-core";
 
 export type Location = {
   name: string,
@@ -65,8 +65,8 @@ export const employees = pgTable("employees", {
 export const  scooters = pgTable("scooters", {
   id: text("id").primaryKey().notNull(),
   number: serial("number").unique().notNull(),
-  latitude: numeric("latitude", {precision: 9, scale: 6}).notNull(), // TODO: Change to numeric for more precision?
-  longitude: numeric("longitude", {precision: 9, scale: 6}).notNull(),
+  latitude: real("latitude").notNull(),
+  longitude: real("longitude").notNull(),
   model: text("model").notNull(),
   yearPurchased: date("year_purchased").notNull(),
   checkedOut: boolean("checked_out").notNull(),
@@ -94,7 +94,7 @@ export const rentals = pgTable("rentals", {
   approverId: text("approver_id").references(() => employees.id),
   // When the scooter is returned and paid, store the transaction ID
   transactionId: text("transaction_id").references(() => transactions.id),
-  mileage: numeric("mileage", {precision: 9, scale: 2}).notNull(),
+  mileage: real("mileage").notNull(),
   startTime: timestamp("start_time", {
     withTimezone: true,
     mode: "date"

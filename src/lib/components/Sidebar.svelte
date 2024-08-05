@@ -35,7 +35,9 @@
 				<a href="/contactUs">Contact Us</a>
 			</li>
 			<li class="hover:text-sidebar-light-primary">
-				<a href="/logout">Log Out</a>
+				<form method="post" action="/logout">
+					<button type="submit" class="hover:text-sidebar-light-primary">Sign Out</button>
+				</form>
 			</li>
 			<img src="src/lib/images/pasted-movie.png" alt="Zoom logo" class="relative w-10 left-14" />
 		</div>

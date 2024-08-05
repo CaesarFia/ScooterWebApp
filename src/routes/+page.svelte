@@ -3,14 +3,23 @@
 	import ProfileCircle from '$lib/components/ProfileCircle.svelte';
 	import Map from '$lib/components/MapComponent.svelte';
 	import { isValidPassword } from '$lib/utils';
-	import type { PageData } from './$types';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
-	export let data: PageData;
+	export let data;
+	const { user, scooters } = data;
 
 	let activeTab: 'signin' | 'signup' = 'signin';
 	let password: string;
 	let confirmPassword: string;
 	let message: string | null = null;
+	let isEmployee: boolean = false;
+	let selectedScooter = "test";
+
+	$: if (user) {
+		isEmployee = user.role === 'employee' || user.role === 'admin';
+		console.log(scooters);
+	}
 
 	$: if (password && confirmPassword) {
 		if (password !== confirmPassword) {
@@ -22,12 +31,20 @@
 		}
 	}
 
-	const { user } = data;
-	console.log(user);
 
-	let isEmployee = user?.isAdmin;
-
-	let selectedScooter = "test";
+	onMount(async () => {
+		if (user && !scooters) {
+			if (!navigator.geolocation) {
+				alert('Geolocation is not supported by your browser');
+			} else {
+				navigator.geolocation.getCurrentPosition((position) => {
+					console.log('Latitude: ', position.coords.latitude);
+					console.log('Longitude: ', position.coords.longitude);
+					goto(`/?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`);
+				});
+			}
+		}
+	});
 </script>
 
 <main>

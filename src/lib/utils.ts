@@ -7,6 +7,7 @@ export function isValidPassword(password: string): boolean {
 	return password.length >= 6 && password.length <= 255;
 }
 
+
 export function subtract(a: string, b: string): string {
 	if (a[0] === '-' && b[0] === '-') {
 		return subtract(b.slice(1), a.slice(1));
@@ -64,6 +65,7 @@ export function subtract(a: string, b: string): string {
 	return result;
 }
 
+
 export function add(a: string, b: string): string {
 	if (a[0] === '-' && b[0] === '-') {
 		return '-' + add(a.slice(1), b.slice(1));
@@ -114,4 +116,22 @@ export function add(a: string, b: string): string {
 	}
 
 	return carry + result;
+}
+
+
+export function globeDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+	const R = 20925721.784777; // Radius of the Earth in feet 
+
+	const lat1Rad = lat1 * Math.PI / 180;
+	const lon1Rad = lon1 * Math.PI / 180;
+	const lat2Rad = lat2 * Math.PI / 180;
+	const lon2Rad = lon2 * Math.PI / 180;
+
+	const dLat = lat2Rad - lat1Rad;
+	const dLon = lon2Rad - lon1Rad;
+
+	const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+	return R * c;
 }
