@@ -3,15 +3,17 @@
     import mapboxgl from 'mapbox-gl';
     import 'mapbox-gl/dist/mapbox-gl.css'
 
+    export let selectedScooter: string;
     let map: mapboxgl.Map;
   const mapboxAccessToken = 'pk.eyJ1IjoiY2Flc2FyZmlhIiwiYSI6ImNseTdxanEwNzA5aXQycW9lMDh6YmFrc2UifQ.CpwPntFIV276Nb755rg-Pg';
 
   type Scooter = {
     latitude: number,
-    longitude: number
+    longitude: number,
+    id: string
   }
 
-  let scooterList: Scooter[] =[{latitude: 29.644323 , longitude: -82.347999}, {latitude: 29.644780, longitude: -82.351581}]
+  let scooterList: Scooter[] =[{latitude: 29.644323 , longitude: -82.347999, id: "hiya"}, {latitude: 29.644780, longitude: -82.351581, id: "teehee"}]
 
   onMount( () => {
     mapboxgl.accessToken = mapboxAccessToken;
@@ -20,9 +22,9 @@
       style: 'mapbox://styles/caesarfia/clxzna0zz006q01p80zkl9v03'
     });
     for (const scoot of scooterList) {
-      new mapboxgl.Marker({scale: 1, anchor: 'center'}).setLngLat([scoot.longitude, scoot.latitude]).addTo(map)
+      const marker = new mapboxgl.Marker({scale: 1, anchor: 'center'}).setLngLat([scoot.longitude, scoot.latitude]).addTo(map)
+      marker.getElement().addEventListener('click', () => {selectedScooter = scoot.id})
     }
-    new mapboxgl.Marker({scale: 1, anchor: 'center'}).setLngLat([-82.347999, 29.644323]).addTo(map);
     });
   </script>
   
