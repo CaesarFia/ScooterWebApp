@@ -1,11 +1,8 @@
-
-import { hash } from '@node-rs/argon2';
 import { error, type Actions } from '@sveltejs/kit';
 import { generateIdFromEntropySize } from 'lucia';
 
 import db from '$lib/db';
 import { rentals, scooters, transactions, users } from '$lib/db/schema';
-import { isValidEmail, isValidPassword } from '$lib/utils';
 
 export const actions: Actions = {
     make_rental: async ({ request, locals }) => {
