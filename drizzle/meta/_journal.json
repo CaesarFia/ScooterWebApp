@@ -71,6 +71,13 @@
       "when": 1722801471361,
       "tag": "0009_early_newton_destine",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1722816518207,
+      "tag": "0010_legal_swarm",
+      "breakpoints": true
     }
   ]
 }

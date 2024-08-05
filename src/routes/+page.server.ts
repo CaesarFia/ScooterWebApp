@@ -2,15 +2,43 @@ import { lucia } from "$lib/server/auth";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { verify, hash } from "@node-rs/argon2";
 import db from "$lib/db";
-import { isValidEmail, isValidPassword } from "$lib/utils";
+import { globeDistance, isValidEmail, isValidPassword } from "$lib/utils";
 import { generateIdFromEntropySize } from "lucia";
 import { customers, users } from "$lib/db/schema";
 
 
-export const load = async ({ locals }) => {
+export const load = async ({ locals, url }) => {
+	if (!locals.user) {
+		return {
+			user: null
+		};
+	}
 	
+	const scootersResult = await db.query.scooters.findMany().execute();
+	let scootersList: typeof scootersResult | null = scootersResult;
+
+	// For users only show scooters within 5 miles
+	if (locals.user.role === "customer") {
+		const latitude = url.searchParams.get("latitude");
+		const longitude = url.searchParams.get("longitude");
+
+		if (latitude != null && !Number.isNaN(latitude) && longitude !== null && !Number.isNaN(longitude)) {
+			scootersList = scootersList.filter(scooter => globeDistance(scooter.latitude, scooter.longitude, Number(latitude), Number(longitude)) < 5280 * 5);
+		}
+		else {
+			scootersList = null;
+		}
+	}
+
 	return {
-		user: locals.user,
+		user: {
+			firstname: locals.user.firstname as string,
+			lastname: locals.user.lastname as string,
+			email: locals.user.email as string,
+			balance: locals.user.balance as string,
+			role: locals.user.role as "customer" | "employee" | "admin",
+		},
+		scooters: scootersList
 	}
 }
 

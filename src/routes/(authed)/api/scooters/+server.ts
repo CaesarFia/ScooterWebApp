@@ -35,7 +35,7 @@ export const POST = async ({ request, locals }) => {
             needRepairs: false,
             battery
         });
-        return json({ id: id });
+        return json({ id });
     } else {
         console.error("isAdmin: " + user.isAdmin + "\nlat: " + latitude + "\nlong: " + longitude + "\nbattery: " + battery);
         error(422, "Missing required fields, required to have 'latitude', 'longitude', and 'battery'.");
