@@ -11,7 +11,6 @@ export const load = async ({ locals }) => {
 	
 	return {
 		user: locals.user,
-		scooters: db.select().from(scooters).execute()
 	}
 }
 
