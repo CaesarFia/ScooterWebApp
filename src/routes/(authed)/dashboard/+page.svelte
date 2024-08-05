@@ -1,5 +1,5 @@
 <script>
-// @ts-nocheck
+	// @ts-nocheck
 
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import { locations } from '$lib/db/schema';
@@ -21,13 +21,13 @@
 	let isEmployee = data.user?.isAdmin;
 </script>
 
-<div class="flex flex-row bg-sidebar-dark-secondary">
+<div class="flex flex-row bg-gray-900">
 	<div class="basis-72">
 		<Sidebar {isEmployee} />
 	</div>
 
-	<div class="basis-10/12 flex flex-row">
-		<div class="basis-2/6 p-10 space-y-5">
+	<div class="basis-10/12 flex flex-row pt-0">
+		<div class="basis-2/6 p-10 space-y-5 pt-0">
 			<div class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10" id="make_scooter">
 				<form class="space-y-3" action="?/make_scooter" method="POST">
 					<h2 class="text-xl font-bold text-tc">Add Scooter</h2>
@@ -46,7 +46,7 @@
 						min="-180"
 						max="180"
 						bind:value={latitude}
-						step=".000001"
+						step="any"
 						id="latitude"
 						required
 					/><br />
@@ -170,7 +170,7 @@
 			</div>
 		</div>
 
-		<div class="basis-4/6 p-10 h-screen">
+		<div class="basis-4/6 p-10 h-screen pt-0">
 			<div class="space-y-5 h-full flex flex-col">
 				<div
 					class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10 overflow-y-auto h-1/4"
