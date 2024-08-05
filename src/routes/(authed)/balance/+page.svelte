@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/Sidebar.svelte';
-	/** @type {import('./$types').PageData} */
+
 	export let data;
 	let isEmployee = data.user?.isAdmin;
 </script>
@@ -19,7 +19,8 @@
 		<div class="flex items-center space-x-2">
 			<input
 				type="number"
-				name="new_balance"
+				name="amount"
+				step="0.01"
 				placeholder="Add balance"
 				class="w-full px-4 py-2 text-gray-800 bg-gray-100 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
 			/>

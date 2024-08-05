@@ -4,7 +4,7 @@ import { verify, hash } from "@node-rs/argon2";
 import db from "$lib/db";
 import { isValidEmail, isValidPassword } from "$lib/utils";
 import { generateIdFromEntropySize } from "lucia";
-import { users } from "$lib/db/schema";
+import { customers, users } from "$lib/db/schema";
 
 
 export const load = async ({ locals }) => {
@@ -98,7 +98,7 @@ export const actions: Actions = {
 			return fail(400, {
 				message: "Invalid name"
 			});
-
+		
 		const userId = generateIdFromEntropySize(10); // 16 characters long
 		const passwordHash = await hash(password, {
 			// recommended minimum parameters
@@ -107,13 +107,18 @@ export const actions: Actions = {
 			outputLen: 32,
 			parallelism: 1
 		});
-		
+
 		await db.insert(users).values({
 			id: userId,
 			firstname: firstname,
             lastname: lastname,
             email: email,
 			passwordHash: passwordHash,
+		});
+
+		await db.insert(customers).values({
+			id: userId,
+			balance: "0",
 		});
 
 
