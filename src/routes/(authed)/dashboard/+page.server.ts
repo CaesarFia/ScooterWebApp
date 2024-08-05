@@ -3,7 +3,7 @@ import { error, type Actions } from '@sveltejs/kit';
 import { generateIdFromEntropySize } from 'lucia';
 
 import db from '$lib/db';
-import { employees, scooters, transactions, users } from '$lib/db/schema';
+import { customers, employees, rentals, scooters, transactions, users } from '$lib/db/schema';
 import { isValidEmail, isValidPassword } from '$lib/utils';
 
 export const actions: Actions = {
@@ -15,6 +15,7 @@ export const actions: Actions = {
 		const checkedOut = formData.has('checked_out');
 		const needRepairs = formData.has('need_repairs');
 		const battery = Number(formData.get('battery')?.toString());
+		const model = formData.get('model')?.toString();
 
 		if (typeof latitude !== 'number' || isNaN(latitude) || latitude < -90 || latitude > 90) {
 			error(400, {
@@ -42,7 +43,9 @@ export const actions: Actions = {
 			longitude: longitude,
 			checkedOut: checkedOut,
 			needRepairs: needRepairs,
-			battery: battery
+			battery: battery,
+			model: model,
+			yearPurchased: new Date()
 		});
 	},
 
@@ -97,6 +100,11 @@ export const actions: Actions = {
 				id: userId,
 				isAdmin: isAdmin
 			});
+		} else {
+			await db.insert(customers).values({
+				id: userId,
+				balance: 0
+			})
 		}
 	}
 };
@@ -110,6 +118,7 @@ export async function load({ locals }) {
 	const scooterList = await db.select().from(scooters);
 	const userList = await db.select().from(users);
 	const transactionList = await db.select().from(transactions);
+	const rentalList = await db.select().from(rentals);
 	const currentUser = locals.user;
 
 	return {
@@ -117,6 +126,7 @@ export async function load({ locals }) {
 			scooterList,
 			userList,
 			transactionList,
+			rentalList,
 			currentUser
 		}
 	};
