@@ -1,11 +1,26 @@
 <script lang="ts">
-	export let scooters: { id: string, number: number, latitude: number, longitude: number, battery: number }[];
+	interface Scooter {
+		id: string;
+		number: number;
+		latitude: number;
+		longitude: number;
+		battery: number;
+	}
+	export let scooterList: Scooter[];
+	export let selectedScooter: Scooter | null = null;
 </script>
 
 <div class="container">
 	<h2 class="text-lg font-bold mb-4">Scooter List</h2>
-	{#each scooters as scooter (scooter.id)}
-		<div class="scooter-item">
+	{#each scooterList as scooter (scooter.id)}
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div
+			class="scooter-item {scooter.id === selectedScooter?.id ? 'selected' : ''}"
+			on:click={() => {
+				selectedScooter = scooter;
+			}}
+		>
 			<div>
 				<div>{scooter.latitude}, {scooter.longitude}</div>
 				<div>Battery: {scooter.battery}%</div>
@@ -25,6 +40,11 @@
 	.scooter-item {
 		@apply flex justify-between items-center py-2 px-4 bg-gray-700 rounded-lg mb-2;
 	}
+
+	.selected {
+		@apply outline;
+	}
+
 	.button {
 		@apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded;
 	}
