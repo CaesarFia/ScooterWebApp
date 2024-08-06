@@ -18,6 +18,42 @@
   
 </script>
 <div id="page" class="h-screen bg-background">
+	<!-- Place this form wherever you want to update user info -->
+	<form class="space-y-3" action="?/make_scooter" method="POST">
+		<h2 class="text-xl font-bold text-tc">Update Profile</h2>
+		<label class="block text-tc text-sm font-medium mb-2" for="firstname">Firstname</label>
+		<input
+			class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
+			type="text"
+			name="firstname"
+			id="firstname"
+			required
+		/><br />
+
+		<label class="block text-tc text-sm font-medium mb-2" for="lastname">Lastname</label>
+		<input
+			class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
+			type="text"
+			name="lastname"
+			id="lastname"
+			required
+		/><br />
+
+		<label class="block text-tc text-sm font-medium mb-2" for="email">Email</label>
+		<input
+			class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
+			type="text"
+			name="email"
+			id="email"
+			required
+		/><br />
+
+		<button
+			class="w-full px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80"
+			>Submit</button
+		>
+	</form>
+
 	<div
 		id="header"
 		class="relative flex h-16 w-screen flex-row items-center justify-between rounded-b-xl border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300"
