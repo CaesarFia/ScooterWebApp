@@ -21,8 +21,8 @@
         <div id="information" class="space-y- m-1 h-full w-1/2 border-gray-600">
           <div class="p-1 text-2xl font-extrabold">Team Lead</div>
           <div class="p-1">Andrey Nikitin</div>
-          <div class="p-1">{github username}</div>
-          <div class="mb-1 pl-1">{email}</div>
+          <div class="p-1">github username</div>
+          <div class="mb-1 pl-1">email</div>
         </div>
       </div>
   
@@ -33,8 +33,8 @@
         <div id="information" class="space-y- m-1 h-full w-1/2 border-gray-600">
           <div class="p-1 text-2xl font-extrabold">Scrum Master</div>
           <div class="p-1">Nikhil Iyer</div>
-          <div class="p-1">{github username}</div>
-          <div class="mb-1 pl-1">{email}</div>
+          <div class="p-1">github username</div>
+          <div class="mb-1 pl-1">email</div>
         </div>
       </div>
   
@@ -45,8 +45,8 @@
         <div id="information" class="space-y- m-1 h-full w-1/2 border-gray-600">
           <div class="p-1 text-2xl font-extrabold">Programmer</div>
           <div class="p-1">Jaiden Magnan</div>
-          <div class="p-1">{github username}</div>
-          <div class="mb-1 pl-1">{email}</div>
+          <div class="p-1">github username</div>
+          <div class="mb-1 pl-1">email</div>
         </div>
       </div>
   

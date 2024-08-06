@@ -14,7 +14,7 @@
 	  </div>
 	</div>
 	<div id="currentBalance" class="relative flex h-screen flex-col items-center bg-inherit">
-	  <div class="mt-64 text-8xl">${00}.{00}</div>
+	  <div class="mt-64 text-8xl">$00.00</div>
 	  <button class="absolute bottom-0 mb-20 rounded-2xl border bg-white pb-5 pl-9 pr-9 pt-5 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300">Top Up?</button>
 	</div>
 	<div class="h-7 bg-gradient-to-t from-white to-background"></div>
