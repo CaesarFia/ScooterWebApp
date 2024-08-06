@@ -1,3 +1,6 @@
+<script lang='ts'>
+	
+</script>
 <div id="page" class="relative flex h-screen w-screen items-center justify-center backdrop-blur-sm">
 	<div
 		class="relative flex h-1/3 w-1/2 flex-col items-center rounded-3xl border-4 border-emerald-400 bg-opal backdrop-blur-sm"
