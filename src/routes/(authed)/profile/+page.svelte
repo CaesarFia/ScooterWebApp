@@ -54,9 +54,9 @@
 		<div class="bg-inherit h-screen w-2/3">
 			<div class="font-extrabold text-2xl">
 				<div class="text-slate-50 text-5xl">Hello,</div>
-				<div class="">{data.currentUser.firstname} {data.currentUser.lastname}</div>
+				<div class="">{data.user.firstname} {data.user.lastname}</div>
 				<div class="mt-5">Email:</div>
-				<div class="">{data.currentUser.email}</div>
+				<div class="">{data.user.email}</div>
 				<div class="mt-5">Date Created:</div>
 				<div class="">date</div>
 			</div>
