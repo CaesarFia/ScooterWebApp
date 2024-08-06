@@ -63,4 +63,9 @@
           <div class="p-1 text-2xl font-extrabold">Programmer</div>
           <div class="p-1">Caesar Fiallos</div>
           <div class="p-1">CaesarFia</div>
-          <div class="mb-1 pl-
+          <div class="mb-1 pl-1">caesarfia@gmail.com</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

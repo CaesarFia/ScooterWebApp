@@ -71,4 +71,12 @@
 	  </div>
 	  <input placeholder="Card Holder's Name:" class="rounded-lg border bg-white py-3 pl-4 pr-24 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300" />
 	  <input placeholder="Card Number:" class="rounded-lg border bg-white py-3 pl-4 pr-24 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300" />
-	 
+	  <div class="relative flex">
+		<input placeholder="expirey date: MM/YY" class="rounded-l-lg border bg-white py-3 pl-5 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300" />
+		<input placeholder="Security Code:" class="rounded-r-lg border bg-white py-3 pl-5 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300" />
+	  </div>
+	  <input placeholder="Zip/Postal Code:" class="rounded-lg border bg-white py-3 pl-4 pr-24 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300" />
+	  <button on:click={handlePayment} class=" w-1/2 rounded-lg border bg-white px-11 py-3 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">Pay $<span>{$amount}</span></button>
+	</div>
+  </div>
+  
