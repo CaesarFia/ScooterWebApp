@@ -7,7 +7,8 @@ export const actions: Actions = {
 	update_profile: async ({request, locals}) => {
 		const formData = await request.formData();
 		console.log(formData.get('id')?.toString());
-		await db.update(users).set({ firstname: formData.get('firstname')?.toString(), lastname: formData.get('lastname')?.toString(), email: formData.get('email')?.toString()  }).where(eq(users.id, locals.user?.id))
+		if(locals.user)
+			await db.update(users).set({ firstname: formData.get('firstname')?.toString(), lastname: formData.get('lastname')?.toString(), email: formData.get('email')?.toString()  }).where(eq(users.id, locals.user.id))
 	}
 };
 
