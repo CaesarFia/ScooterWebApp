@@ -93,6 +93,15 @@
 						required
 					/><br />
 
+					<label class="block text-tc text-sm font-medium mb-2" for="battery">Model</label>
+					<input
+						class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
+						type="text"
+						name="model"
+						id="model"
+						required
+					/><br />
+
 					<button
 						class="w-full px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80"
 						>Submit</button
@@ -244,6 +253,45 @@
 								</tr>
 							{/each}
 						</body>
+					</table>
+				</div>
+
+				<div
+					class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10 overflow-y-auto h-1/4"
+					id="list_transactions"
+				>
+					<h2 class="text-xl font-bold text-tc">Approve Rentals</h2>
+					<table class="w-full text-tc border-separate border-spacing-2">
+						<thead>
+							<tr class="bg-tc text-white">
+								<th class="p-4 border border-gray-300 rounded-md">Customer</th>
+								<th class="p-4 border border-gray-300 rounded-md">Scooter</th>
+								<th class="p-4 border border-gray-300 rounded-md">Mileage</th>
+								<th class="p-4 border border-gray-300 rounded-md">Start Time</th>
+								<th class="p-4 border border-gray-300 rounded-md">End Time</th>
+								<th class="bg-charcoal"></th>
+							</tr>
+						</thead>
+						<tbody>
+							{#each data.data.rentalList as rental}
+								<tr class="bg-gray-800 text-white">
+									<td>{rental.customerId}</td>
+									<td>{rental.scooterId}</td>
+									<td>{rental.mileage}</td>
+									<td>{rental.startTime}</td>
+									<td>{rental.endTime}</td>
+									{#if !rental.approverId}
+									<td class="bg-charcoal"> 
+										<form method="post" action="?/approve_rental">
+										<input type="hidden" name="id" bind:value={rental.id} />
+										<button type="submit"
+										class="w-full px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80"
+										>Approve</button
+									></form></td>
+									{/if}
+								</tr>
+							{/each}
+						</tbody>
 					</table>
 				</div>
 			</div>

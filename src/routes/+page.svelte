@@ -9,6 +9,7 @@
 
 	export let data;
 	const { user, scooterList, userLocation } = data;
+	export let data
 
 	let activeTab: 'signin' | 'signup' = 'signin';
 	let password: string;
