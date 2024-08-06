@@ -1,6 +1,11 @@
+<script lang='ts'>
+  function goBack() {
+    history.back();
+  }
+</script>
 <div id="page" class="h-screen bg-background">
     <div id="header" class="relative flex h-16 w-screen flex-row items-center justify-between rounded-b-xl border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">
-      <button class="relative ml-1 flex rounded-full bg-background p-1">
+      <button on:click={goBack} class="relative ml-1 flex rounded-full bg-background p-1">
         <img src="src/lib/images/arrowBack.png" alt="back arrow img" />
       </button>
       <div class="text-2xl font-bold">Locations</div>
@@ -9,7 +14,7 @@
           <div class="rounded-l-lg border border-gray-600 bg-background text-gray-900">
             <img src="src/lib/images/profileHead.png" alt="generic profile img" />
           </div>
-          <div class="mr-1 rounded-r-lg border border-gray-600 bg-background p-1 text-gray-900">{username}</div>
+          <div class="mr-1 rounded-r-lg border border-gray-600 bg-background p-1 text-gray-900">username</div>
         </a>
       </div>
     </div>
@@ -32,16 +37,16 @@
           <img src="src/lib/images/genScooterImg.jpg" alt="generic scooter img" />
         </div>
         <div id="information" class="w-3/5 p-2">
-          <div class="font-extrabold">{scooter id}</div>
-          <div>{Est. cost}</div>
+          <div class="font-extrabold">scooter id</div>
+          <div>Est. cost</div>
           <div class="flex items-center space-x-3">
-            <div class="">{Charge}</div>
-            <div>{make}</div>
-            <div>{date purchased}</div>
-            <div>{# miles driven}</div>
+            <div class="">Charge</div>
+            <div>make</div>
+            <div>date purchased</div>
+            <div># miles driven</div>
           </div>
         </div>
-        <div id="amount" class="relative flex w-1/5 items-center justify-center rounded-r-lg border-2 border-gray-600 text-2xl font-extrabold">{availabilty}</div>
+        <div id="amount" class="relative flex w-1/5 items-center justify-center rounded-r-lg border-2 border-gray-600 text-2xl font-extrabold">availabilty</div>
       </div>
     </div>
   </div>
