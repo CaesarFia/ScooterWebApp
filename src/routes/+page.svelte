@@ -5,20 +5,21 @@
 	import { isValidPassword } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import ScooterList from '$lib/components/ScooterList.svelte';
 
 	export let data;
-	const { user, scooters } = data;
+	const { user, scooterList, userLocation } = data;
 
 	let activeTab: 'signin' | 'signup' = 'signin';
 	let password: string;
 	let confirmPassword: string;
 	let message: string | null = null;
 	let isEmployee: boolean = false;
-	let selectedScooter = "test";
+	let selectedScooter: { id: string, latitude: number, longitude: number } | null = null;
 
 	$: if (user) {
 		isEmployee = user.role === 'employee' || user.role === 'admin';
-		console.log(scooters);
+		console.log(scooterList);
 	}
 
 	$: if (password && confirmPassword) {
@@ -31,15 +32,16 @@
 		}
 	}
 
+	$: if (selectedScooter) {
+		console.log(selectedScooter);
+	}
 
 	onMount(async () => {
-		if (user && !scooters) {
+		if (user && !scooterList) {
 			if (!navigator.geolocation) {
 				alert('Geolocation is not supported by your browser');
 			} else {
 				navigator.geolocation.getCurrentPosition((position) => {
-					console.log('Latitude: ', position.coords.latitude);
-					console.log('Longitude: ', position.coords.longitude);
 					goto(`/?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`);
 				});
 			}
@@ -48,7 +50,19 @@
 </script>
 
 <main>
-	<Map bind:selectedScooter={selectedScooter} />
+	{#if user && !scooterList}
+		<div class="flex justify-center items-center h-screen">
+			<div class="flex flex-col items-center">
+				<img src="src/lib/images/loading.gif" alt="loading" class="w-20 h-20" />
+				<p class="text-white">Loading...</p>
+			</div>
+		</div>
+	{:else if scooterList !== null}
+		<Map scooterList={scooterList} userLocation={userLocation} bind:selectedScooter={selectedScooter} />
+		<ScooterList scooterList={scooterList} bind:selectedScooter={selectedScooter} />
+	{:else}
+		<Map userLocation={userLocation} bind:selectedScooter={selectedScooter} />
+	{/if}
 	{#if !user}
 		<div
 			class="LoginPopUp flex h-screen items-center justify-center z-1000 backdrop-blur-sm transition:fade"

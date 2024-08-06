@@ -4,7 +4,7 @@ import { verify, hash } from "@node-rs/argon2";
 import db from "$lib/db";
 import { globeDistance, isValidEmail, isValidPassword } from "$lib/utils";
 import { generateIdFromEntropySize } from "lucia";
-import { customers, users } from "$lib/db/schema";
+import { customers, scooters, users } from "$lib/db/schema";
 
 
 export const load = async ({ locals, url }) => {
@@ -14,31 +14,52 @@ export const load = async ({ locals, url }) => {
 		};
 	}
 	
-	const scootersResult = await db.query.scooters.findMany().execute();
-	let scootersList: typeof scootersResult | null = scootersResult;
+	const scootersResult = await db.select().from(scooters);
+	let scooterList: typeof scootersResult | null = scootersResult;
+
+	let latitude: number | undefined = undefined;
+	let longitude: number | undefined = undefined;
 
 	// For users only show scooters within 5 miles
 	if (locals.user.role === "customer") {
-		const latitude = url.searchParams.get("latitude");
-		const longitude = url.searchParams.get("longitude");
+		const latitudeParam = url.searchParams.get("latitude");
+		const longitudeParam = url.searchParams.get("longitude");
 
-		if (latitude != null && !Number.isNaN(latitude) && longitude !== null && !Number.isNaN(longitude)) {
-			scootersList = scootersList.filter(scooter => globeDistance(scooter.latitude, scooter.longitude, Number(latitude), Number(longitude)) < 5280 * 5);
+		if (latitudeParam != null && !Number.isNaN(latitudeParam) && longitudeParam !== null && !Number.isNaN(longitudeParam)) {
+			latitude = Number(latitudeParam);
+			longitude = Number(longitudeParam);
+			console.log(latitude, longitude);
+			scooterList = scooterList.filter(scooter => globeDistance(scooter.latitude, scooter.longitude, Number(latitude), Number(longitude)) < 5280 * 5);
+			console.log(scooterList);
 		}
 		else {
-			scootersList = null;
+			scooterList = null;
 		}
 	}
 
-	return {
+	const res = {
 		user: {
+			id: locals.user.id as string,
 			firstname: locals.user.firstname as string,
 			lastname: locals.user.lastname as string,
 			email: locals.user.email as string,
 			balance: locals.user.balance as string,
 			role: locals.user.role as "customer" | "employee" | "admin",
 		},
-		scooters: scootersList
+		scooterList
+	};
+
+	if (latitude !== undefined && longitude !== undefined) {
+		return {
+			...res,
+			userLocation: {
+				latitude: latitude,
+				longitude: longitude,
+			}
+		}
+	}
+	else {
+		return res;
 	}
 }
 
