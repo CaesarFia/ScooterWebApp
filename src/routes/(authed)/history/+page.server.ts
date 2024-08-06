@@ -1,8 +1,8 @@
-import { redirect, error, type Actions } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
 import db from '$lib/db';
 import { rentals } from '$lib/db/schema';
+import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ locals }) {
@@ -19,9 +19,7 @@ export async function load({ locals }) {
     console.log(user_rentals)
 
     return {
-        data: {
-            rentals: user_rentals,
-            user
-        }
+        rentals: user_rentals,
+        user
     };
 }

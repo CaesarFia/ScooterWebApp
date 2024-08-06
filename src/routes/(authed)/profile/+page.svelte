@@ -13,7 +13,7 @@
 					<img src="src/lib/images/profileHead.png" alt="generic profile img" />
 				</div>
 				<div class="mr-1 rounded-r-lg border border-gray-600 bg-background p-1 text-gray-900">
-					{username}
+					username
 				</div>
 			</a>
 		</div>
@@ -33,11 +33,11 @@
 		<div class="bg-inherit h-screen w-2/3">
 			<div class="font-extrabold text-2xl">
 				<div class="text-slate-50 text-5xl">Hello,</div>
-				<div class="">{firstName} {lastName}!</div>
+				<div class="">firstName lastName!</div>
 				<div class="mt-5">Email:</div>
-				<div class="">{Email}</div>
+				<div class="">Email</div>
 				<div class="mt-5">Date Created:</div>
-				<div class="">{Date}</div>
+				<div class="">Date</div>
 			</div>
 			<button
 				class="absolute bottom-0 mb-20 ml-24 rounded-2xl border bg-white pb-5 pl-9 pr-9 pt-5 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300"
