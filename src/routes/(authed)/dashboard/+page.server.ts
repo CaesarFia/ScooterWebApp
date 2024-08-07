@@ -149,6 +149,18 @@ export const actions: Actions = {
 				balance: 0
 			})
 		}
+	},
+	delete_user: async ({ request, locals }) => {
+		if (!locals.user || !locals.user.isAdmin) {
+			error(403, { message: 'Forbidden' });
+		}
+
+		const formData = await request.formData();
+		const id = formData.get('id')?.toString();
+		// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
+		// keep in mind some database (e.g. mysql) are case insensitive
+		if(id != locals.user.id)
+			await db.delete(users).where(eq(users.id, id ? id : ""));
 	}
 };
 

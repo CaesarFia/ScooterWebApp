@@ -269,6 +269,12 @@
 									<td>{user.users.lastname}</td>
 									<td>{user.users.email}</td>
 									<td>{user.employees.isAdmin ? "Admin" : "Employee"}</td>
+									<td class="bg-charchoal">
+									<form class="bg-charchoal" action="?/delete_user" method="POST">
+										<input type="hidden" name="id" value = {user.users.id}/>
+										<button type="submit" class="px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80">Delete</button>
+									</form>
+									</td>
 								</tr>
 							{/each}
 						</tbody>
