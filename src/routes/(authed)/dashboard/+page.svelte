@@ -2,12 +2,6 @@
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import { locations } from '$lib/db/schema';
 
-	interface Scooter {
-		id: number,
-		latitude: number,
-		longitude: number,
-	}
-
 	export let data;
 
 	let selectedLocation = locations[0];

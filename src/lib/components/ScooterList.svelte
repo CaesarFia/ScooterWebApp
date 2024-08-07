@@ -1,18 +1,52 @@
 <script lang="ts">
-	interface Scooter {
-		id: string;
-		number: number;
-		latitude: number;
-		longitude: number;
-		battery: number;
-	}
+	import { type Scooter } from "$lib/db/schema";
 	export let scooterList: Scooter[];
+	export let filteredScooterList: Scooter[];
 	export let selectedScooter: Scooter | null = null;
+
+	let search: string = "";
+
+	$: if (scooterList || search) {
+		filteredScooterList = scooterList;
+		if (search) {
+			const filters = search.split(' ');
+			for (const filter of filters) {
+				if (filter.includes("=")) {
+					const kv = filter.split("=")
+					const key = kv[0];
+					const value = kv[1];
+					filteredScooterList = filteredScooterList.filter(scooter => { 
+						if (!(key in scooter)) {
+							return false
+						}
+
+						return scooter[key].toString() === value;
+					});
+				}
+				else {
+					filteredScooterList = filteredScooterList.filter(scooter => {
+						for (const key in scooter) {
+							if (scooter[key].toString().includes(filter)) {
+								return true;
+							}
+						}
+						return false;
+					})
+				}
+			}
+		}
+	}	
 </script>
 
 <div class="container">
 	<h2 class="text-lg font-bold mb-4">Scooter List</h2>
-	{#each scooterList as scooter (scooter.id)}
+	<input
+		class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
+		type="text"
+		name="search"
+		bind:value={search}
+	/>
+	{#each filteredScooterList as scooter (scooter.id)}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
