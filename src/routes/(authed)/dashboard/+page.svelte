@@ -191,6 +191,7 @@
 				>
 					<h2 class="text-xl font-bold text-tc">Scooters</h2>
 					<div class="w-full table text-tc border-separate border-spacing-2">
+						<thead>
 							<tr class="bg-tc table-row text-white border-spacing-0">
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Latitude</th>
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Longitude</th>
@@ -200,7 +201,9 @@
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Year Purchased</th>
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Model</th>
 							</tr>
-							{#each data.data.scooterList as scooter}
+						</thead>
+						<tbody>
+							{#each data.scooterList as scooter}
 								<form class="table-row bg-gray-800 text-white" action="?/update_scooter" method="POST">
 									<td><input class="w-f text-center bg-gray-800 text-white" 
 									type="number"
@@ -248,14 +251,24 @@
 								<th class="p-4 border border-gray-300 rounded-md">First Name</th>
 								<th class="p-4 border border-gray-300 rounded-md">Last Name</th>
 								<th class="p-4 border border-gray-300 rounded-md">Email</th>
+								<th class="p-4 border border-gray-300 rounded-md">Account Type</th>
 							</tr>
 						</thead>
 						<tbody>
-							{#each data.data.userList as user}
+							{#each data.customerList as user}
 								<tr class="bg-gray-800 text-white">
-									<td>{user.firstname}</td>
-									<td>{user.lastname}</td>
-									<td>{user.email}</td>
+									<td>{user.users.firstname}</td>
+									<td>{user.users.lastname}</td>
+									<td>{user.users.email}</td>
+									<td>Customer</td>
+								</tr>
+							{/each}
+							{#each data.employeeList as user}
+								<tr class="bg-gray-800 text-white">
+									<td>{user.users.firstname}</td>
+									<td>{user.users.lastname}</td>
+									<td>{user.users.email}</td>
+									<td>{user.employees.isAdmin ? "Admin" : "Employee"}</td>
 								</tr>
 							{/each}
 						</tbody>
@@ -275,7 +288,7 @@
 							</tr>
 						</thead>
 						<body>
-							{#each data.data.transactionList as transaction}
+							{#each data.transactionList as transaction}
 								<tr class="bg-gray-800 text-white">
 									<td>{transaction.customerId}</td>
 									<td>{transaction.amount}</td>
@@ -302,7 +315,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							{#each data.data.rentalList as rental}
+							{#each data.rentalList as rental}
 								<tr class="bg-gray-800 text-white">
 									<td>{rental.customerId}</td>
 									<td>{rental.scooterId}</td>

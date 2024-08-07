@@ -159,18 +159,18 @@ export async function load({ locals }) {
 	}
 
 	const scooterList = (await db.select().from(scooters).orderBy(scooters.number));
-	const userList = await db.select().from(users);
+	const customerList = await db.select().from(users).innerJoin(customers, eq(users.id, customers.id));
+	const employeeList = await db.select().from(users).innerJoin(employees, eq(users.id, employees.id));
 	const transactionList = await db.select().from(transactions);
 	const rentalList = await db.select().from(rentals);
 	const currentUser = locals.user;
 
 	return {
-		data: {
-			scooterList,
-			userList,
-			transactionList,
-			rentalList,
-			currentUser
-		}
+		scooterList,
+		customerList,
+		employeeList,
+		transactionList,
+		rentalList,
+		currentUser
 	};
 }
