@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/Sidebar.svelte';
-	import { locations, transactions } from '$lib/db/schema';
+	import { locations } from '$lib/db/schema';
 
 	export let data;
 
@@ -200,7 +200,7 @@
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Year Purchased</th>
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Model</th>
 							</tr>
-							{#each data.data.scooterList as scooter}
+							{#each data.scooterList as scooter}
 								<form class="table-row bg-gray-800 text-white" action="?/update_scooter" method="POST">
 									<td><input class="w-f text-center bg-gray-800 text-white" 
 									type="number"
@@ -297,7 +297,7 @@
 							<th class="p-4 border border-gray-300 rounded-md">Modified by</th>
 							{/if}
 						</div>
-						{#each data.data.transactionList as transaction}
+						{#each data.transactionList as transaction}
 							<form class="table-row bg-gray-800 text-white" action="?/update_transaction" method="POST">
 								<div class="table-element">{transaction.customerId}</div>
 								<input class="table-element w-f text-center bg-gray-800 text-white" 
