@@ -15,7 +15,7 @@
 	let confirmPassword: string;
 	let message: string | null = null;
 	let isEmployee: boolean = false;
-	let selectedScooter: { id: string, latitude: number, longitude: number } | null = null;
+	let selectedScooter: { id: string, latitude: number, longitude: number, number: number, battery: number } | null = null;
 
 	$: if (user) {
 		isEmployee = user.role === 'employee' || user.role === 'admin';
@@ -59,7 +59,7 @@
 		</div>
 	{:else if scooterList !== null}
 		<Map scooterList={scooterList} userLocation={userLocation} bind:selectedScooter={selectedScooter} />
-		<ScooterList scooterList={scooterList} bind:selectedScooter={selectedScooter} />
+		<ScooterList scooterList={scooterList ? scooterList : []} bind:selectedScooter={selectedScooter} />
 	{:else}
 		<Map userLocation={userLocation} bind:selectedScooter={selectedScooter} />
 	{/if}

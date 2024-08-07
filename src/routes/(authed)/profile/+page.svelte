@@ -1,9 +1,19 @@
+<script lang="ts">
+	import { goto } from '$app/navigation';
+
+	export let data;
+
+	let firstname = data.user.firstname;
+	let lastname = data.user.lastname;
+	let email = data.user.email;
+</script>
+
 <div id="page" class="h-screen bg-background">
 	<div
 		id="header"
 		class="relative flex h-16 w-screen flex-row items-center justify-between rounded-b-xl border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300"
 	>
-		<button class="relative ml-1 flex rounded-full bg-background p-1">
+		<button class="relative ml-1 flex rounded-full bg-background p-1" on:click={() => goto("/")}>
 			<img src="src/lib/images/arrowBack.png" alt="back arrow img" />
 		</button>
 		<div class="text-2xl font-bold">Profile</div>
@@ -13,7 +23,7 @@
 					<img src="src/lib/images/profileHead.png" alt="generic profile img" />
 				</div>
 				<div class="mr-1 rounded-r-lg border border-gray-600 bg-background p-1 text-gray-900">
-					{username}
+					{data.user.firstname} {data.user.lastname}
 				</div>
 			</a>
 		</div>
@@ -31,22 +41,41 @@
 			</div>
 		</div>
 		<div class="bg-inherit h-screen w-2/3">
-			<div class="font-extrabold text-2xl">
-				<div class="text-slate-50 text-5xl">Hello,</div>
-				<div class="">{firstName} {lastName}!</div>
-				<div class="mt-5">Email:</div>
-				<div class="">{Email}</div>
-				<div class="mt-5">Date Created:</div>
-				<div class="">{Date}</div>
-			</div>
-			<button
-				class="absolute bottom-0 mb-20 ml-24 rounded-2xl border bg-white pb-5 pl-9 pr-9 pt-5 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300"
-				>Edit</button
+			<form class="space-y-3 font-extrabold text-2xl" action="?/update_user" method="POST">
+				<h2 class="text-slate-50 text-5xl">Hello!</h2>
+				<label class="" for="firstname">First Name:</label>
+				<input
+					class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
+					type="text"
+					value={firstname}
+					name="firstname"
+					id="firstname"
+					required
+				/>
+				<label class="" for="lastname">Last Name</label>
+				<input
+					class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
+					type="text"
+					value={lastname}
+					name="lastname"
+					id="lastname"
+					required
+				/><br />
+				<label class="" for="email">Email</label>
+				<input
+					class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
+					type="text"
+					value={email}
+					name="email"
+					id="email"
+					required
+				/><br />
+				
+				<button
+				class="mb-20 ml-56 rounded-2xl border bg-white pb-5 pl-9 pr-9 pt-5 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300"
+				>Update!</button
 			>
-			<button
-				class="absolute bottom-0 mb-20 ml-56 rounded-2xl border bg-white pb-5 pl-9 pr-9 pt-5 text-gray-700 focus:border-emerald-300 focus:outline-none focus:ring focus:ring-emerald-200 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300"
-				>Save</button
-			>
+			</form>
 		</div>
 	</div>
 </div>

@@ -23,7 +23,6 @@ export const actions: Actions = {
         }
 
         const transaction_id = generateIdFromEntropySize(10);
-
         await db.insert(transactions).values({
             id: transaction_id,
             customerId: event.locals.user.id,
@@ -42,13 +41,9 @@ export async function load({ locals }) {
         error(403, { message: 'Forbidden' });
     }
 
-    const currentBalance = locals.user.balance;
     const user = locals.user
 
     return {
-        data: {
-            currentBalance,
-            user
-        }
+        user
     };
 }
