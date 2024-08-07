@@ -11,6 +11,7 @@
 	export let data;
 	const { user, scooterList, userLocation } = data;
 
+	let filteredScooterList = scooterList;
 	let activeTab: 'signin' | 'signup' = 'signin';
 	let password: string;
 	let confirmPassword: string;
@@ -57,9 +58,9 @@
 				<p>Loading...</p>
 			</div>
 		</div>
-	{:else if scooterList}
-		<Map scooterList={scooterList} userLocation={userLocation} bind:selectedScooter={selectedScooter} />
-		<ScooterList scooterList={scooterList ? scooterList : []} bind:selectedScooter={selectedScooter} />
+	{:else if scooterList && filteredScooterList}
+		<Map scooterList={filteredScooterList} userLocation={userLocation} bind:selectedScooter={selectedScooter} />
+		<ScooterList scooterList={scooterList} bind:filteredScooterList={filteredScooterList} bind:selectedScooter={selectedScooter} />
 	{:else}
 		<Map userLocation={userLocation} bind:selectedScooter={selectedScooter} />
 	{/if}

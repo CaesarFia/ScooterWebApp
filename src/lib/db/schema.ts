@@ -27,7 +27,7 @@ export interface Scooter {
   latitude: number,
   longitude: number,
   model: string,
-  yearPurchased: string,
+  yearPurchased: number,
   checkedOut: boolean,
   needRepairs: boolean,
   battery: number
