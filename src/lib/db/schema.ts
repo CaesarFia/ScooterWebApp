@@ -21,6 +21,18 @@ export const locations: Location[] = [
   {name: "Campus cravings", latitude: 29.650039, longitude: -82.346129}
 ]
 
+export interface Scooter {
+  id: string,
+  number: number,
+  latitude: number,
+  longitude: number,
+  model: string,
+  yearPurchased: string,
+  checkedOut: boolean,
+  needRepairs: boolean,
+  battery: number
+}
+
 export enum UserType {
   Customer= "customer",
   Employee= "employee",

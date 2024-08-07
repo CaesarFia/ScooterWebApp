@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import ScooterList from '$lib/components/ScooterList.svelte';
+	import type { Scooter } from '$lib/db/schema.js';
 
 	export let data;
 	const { user, scooterList, userLocation } = data;
@@ -15,7 +16,7 @@
 	let confirmPassword: string;
 	let message: string | null = null;
 	let isEmployee: boolean = false;
-	let selectedScooter: { id: string, latitude: number, longitude: number, number: number, battery: number } | null = null;
+	let selectedScooter: Scooter | null = null;
 
 	$: if (user) {
 		isEmployee = user.role === 'employee' || user.role === 'admin';
@@ -53,11 +54,10 @@
 	{#if user && !scooterList}
 		<div class="flex justify-center items-center h-screen">
 			<div class="flex flex-col items-center">
-				<img src="src/lib/images/loading.gif" alt="loading" class="w-20 h-20" />
-				<p class="text-white">Loading...</p>
+				<p>Loading...</p>
 			</div>
 		</div>
-	{:else if scooterList !== null}
+	{:else if scooterList}
 		<Map scooterList={scooterList} userLocation={userLocation} bind:selectedScooter={selectedScooter} />
 		<ScooterList scooterList={scooterList ? scooterList : []} bind:selectedScooter={selectedScooter} />
 	{:else}

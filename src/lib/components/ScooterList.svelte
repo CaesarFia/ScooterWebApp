@@ -1,11 +1,5 @@
 <script lang="ts">
-	interface Scooter {
-		id: string;
-		number: number;
-		latitude: number;
-		longitude: number;
-		battery: number;
-	}
+	import type { Scooter } from "$lib/db/schema";
 	export let scooterList: Scooter[];
 	export let selectedScooter: Scooter | null = null;
 </script>

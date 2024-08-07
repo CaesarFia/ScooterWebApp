@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Scooter } from '$lib/db/schema'
 	import { onMount } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
 	import 'mapbox-gl/dist/mapbox-gl.css';
@@ -22,11 +23,6 @@
 
 	const mapboxAccessToken =
 		'pk.eyJ1IjoiY2Flc2FyZmlhIiwiYSI6ImNseTdxanEwNzA5aXQycW9lMDh6YmFrc2UifQ.CpwPntFIV276Nb755rg-Pg';
-	interface Scooter {
-		latitude: number;
-		longitude: number;
-		id: string;
-	}
 
 	onMount(() => {
 		mapboxgl.accessToken = mapboxAccessToken;
