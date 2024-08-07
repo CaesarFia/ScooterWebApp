@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Scooter } from '$lib/db/schema';
 	import { onMount } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
 	import 'mapbox-gl/dist/mapbox-gl.css';
@@ -9,24 +10,72 @@
 
 	let map: mapboxgl.Map;
 	let markers: Map<string, mapboxgl.Marker> = new Map();
+	let lastSelectedScooter: Scooter | null = selectedScooter;
+
+	$: if (map && scooterList) {
+		for (const [_, marker] of markers) {
+			marker.remove();
+		}
+
+		for (const scooter of scooterList) {
+			let marker = markers.get(scooter.id);
+			if (!marker) {
+				console.log(scooter.id, marker);
+				marker = new mapboxgl.Marker({ scale: 1, anchor: 'center', color: 'blue' }).setLngLat([
+					scooter.longitude,
+					scooter.latitude
+				]);
+				marker.getElement().addEventListener('click', () => {
+					selectedScooter = scooter;
+				});
+				markers.set(scooter.id, marker);
+			}
+			marker.addTo(map);
+		}
+	}
 
 	$: if (selectedScooter) {
-		for (const [id, marker] of markers) {
-			if (id === selectedScooter.id) {
-				marker.getElement().style.backgroundColor = 'blue';
-			} else {
-				marker.getElement().style.backgroundColor = '';
+		// Reset the previously selected marker
+		if (lastSelectedScooter) {
+			const lssCopy = {...lastSelectedScooter};
+			const selectedMarker = markers.get(lastSelectedScooter.id);
+			if (selectedMarker) {
+				selectedMarker.remove();
+
+				const marker = new mapboxgl.Marker({ scale: 1, anchor: 'center', color: 'blue' }).setLngLat(
+					[lastSelectedScooter.longitude, lastSelectedScooter.latitude]
+				)
+				if (scooterList.find(scooter => scooter.id === lssCopy.id)) {
+					marker.addTo(map);
+				}
+				marker.getElement().addEventListener('click', () => {
+					selectedScooter = lssCopy;
+				});
+				markers.set(lastSelectedScooter.id, marker);
 			}
 		}
+
+		// Change the color of the selected marker
+		const selectedMarker = markers.get(selectedScooter.id);
+		if (selectedMarker) {
+			selectedMarker.remove();
+
+			const marker = new mapboxgl.Marker({ scale: 1, anchor: 'center', color: 'green' }).setLngLat([
+				selectedScooter.longitude,
+				selectedScooter.latitude
+			]).addTo(map);
+			marker.getElement().addEventListener('click', () => {
+				selectedScooter = null;
+			});
+			markers.set(selectedScooter.id, marker);
+		}
+
+		// Set the lastSelectedScooter for next time
+		lastSelectedScooter = selectedScooter;
 	}
 
 	const mapboxAccessToken =
 		'pk.eyJ1IjoiY2Flc2FyZmlhIiwiYSI6ImNseTdxanEwNzA5aXQycW9lMDh6YmFrc2UifQ.CpwPntFIV276Nb755rg-Pg';
-	interface Scooter {
-		latitude: number;
-		longitude: number;
-		id: string;
-	}
 
 	onMount(() => {
 		mapboxgl.accessToken = mapboxAccessToken;
@@ -34,16 +83,6 @@
 			container: 'map',
 			style: 'mapbox://styles/caesarfia/clxzna0zz006q01p80zkl9v03'
 		});
-
-		for (const scooter of scooterList) {
-			const marker = new mapboxgl.Marker({ scale: 1, anchor: 'center' })
-				.setLngLat([scooter.longitude, scooter.latitude])
-				.addTo(map);
-			marker.getElement().addEventListener('click', () => {
-				selectedScooter = scooter;
-			});
-			markers.set(scooter.id, marker);
-		}
 
 		if (userLocation) {
 			new mapboxgl.Marker({ scale: 1, anchor: 'center', color: 'orange' })

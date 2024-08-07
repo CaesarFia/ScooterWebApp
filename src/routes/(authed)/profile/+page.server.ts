@@ -1,9 +1,8 @@
-import { hash } from '@node-rs/argon2';
 import { error, type Actions } from '@sveltejs/kit';
 
 import db from '$lib/db';
 import { users } from '$lib/db/schema';
-import { isValidEmail, isValidPassword } from '$lib/utils';
+import { isValidEmail } from '$lib/utils';
 import { eq } from 'drizzle-orm';
 
 export const actions: Actions = {

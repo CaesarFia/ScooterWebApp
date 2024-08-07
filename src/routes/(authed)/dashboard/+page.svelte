@@ -2,12 +2,6 @@
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import { locations, transactions } from '$lib/db/schema';
 
-	interface Scooter {
-		id: number,
-		latitude: number,
-		longitude: number,
-	}
-
 	export let data;
 
 	let selectedLocation = locations[0];
@@ -254,14 +248,36 @@
 								<th class="p-4 border border-gray-300 rounded-md">First Name</th>
 								<th class="p-4 border border-gray-300 rounded-md">Last Name</th>
 								<th class="p-4 border border-gray-300 rounded-md">Email</th>
+								<th class="p-4 border border-gray-300 rounded-md">Account Type</th>
 							</tr>
 						</thead>
 						<tbody>
-							{#each data.data.userList as user}
+							{#each data.customerList as user}
 								<tr class="bg-gray-800 text-white">
-									<td>{user.firstname}</td>
-									<td>{user.lastname}</td>
-									<td>{user.email}</td>
+									<td>{user.users.firstname}</td>
+									<td>{user.users.lastname}</td>
+									<td>{user.users.email}</td>
+									<td>Customer</td>
+									<td class="bg-charchoal">
+									<form class="bg-charchoal" action="?/delete_user" method="POST">
+										<input type="hidden" name="id" value = {user.users.id}/>
+										<button type="submit" class="px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80">Delete</button>
+									</form>
+									</td>
+								</tr>
+							{/each}
+							{#each data.employeeList as user}
+								<tr class="bg-gray-800 text-white">
+									<td>{user.users.firstname}</td>
+									<td>{user.users.lastname}</td>
+									<td>{user.users.email}</td>
+									<td>{user.employees.isAdmin ? "Admin" : "Employee"}</td>
+									<td class="bg-charchoal">
+									<form class="bg-charchoal" action="?/delete_user" method="POST">
+										<input type="hidden" name="id" value = {user.users.id}/>
+										<button type="submit" class="px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80">Delete</button>
+									</form>
+									</td>
 								</tr>
 							{/each}
 						</tbody>
@@ -319,7 +335,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							{#each data.data.rentalList as rental}
+							{#each data.rentalList as rental}
 								<tr class="bg-gray-800 text-white">
 									<td>{rental.customerId}</td>
 									<td>{rental.scooterId}</td>

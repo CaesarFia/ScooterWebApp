@@ -161,6 +161,18 @@ export const actions: Actions = {
 				balance: 0
 			})
 		}
+	},
+	delete_user: async ({ request, locals }) => {
+		if (!locals.user || !locals.user.isAdmin) {
+			error(403, { message: 'Forbidden' });
+		}
+
+		const formData = await request.formData();
+		const id = formData.get('id')?.toString();
+		// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
+		// keep in mind some database (e.g. mysql) are case insensitive
+		if(id != locals.user.id)
+			await db.delete(users).where(eq(users.id, id ? id : ""));
 	}
 };
 
@@ -171,18 +183,18 @@ export async function load({ locals }) {
 	}
 
 	const scooterList = (await db.select().from(scooters).orderBy(scooters.number));
-	const userList = await db.select().from(users);
+	const customerList = await db.select().from(users).innerJoin(customers, eq(users.id, customers.id));
+	const employeeList = await db.select().from(users).innerJoin(employees, eq(users.id, employees.id));
 	const transactionList = await db.select().from(transactions);
 	const rentalList = await db.select().from(rentals);
 	const currentUser = locals.user;
 
 	return {
-		data: {
-			scooterList,
-			userList,
-			transactionList,
-			rentalList,
-			currentUser
-		}
+		scooterList,
+		customerList,
+		employeeList,
+		transactionList,
+		rentalList,
+		currentUser
 	};
 }
