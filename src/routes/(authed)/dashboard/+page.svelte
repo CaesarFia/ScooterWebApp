@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/Sidebar.svelte';
-	import { locations } from '$lib/db/schema';
+	import { locations, transactions } from '$lib/db/schema';
 
 	export let data;
 
@@ -191,7 +191,6 @@
 				>
 					<h2 class="text-xl font-bold text-tc">Scooters</h2>
 					<div class="w-full table text-tc border-separate border-spacing-2">
-						<thead>
 							<tr class="bg-tc table-row text-white border-spacing-0">
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Latitude</th>
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Longitude</th>
@@ -201,9 +200,7 @@
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Year Purchased</th>
 								<th class="p-4 table-cell border border-gray-300 rounded-md">Model</th>
 							</tr>
-						</thead>
-						<tbody>
-							{#each data.scooterList as scooter}
+							{#each data.data.scooterList as scooter}
 								<form class="table-row bg-gray-800 text-white" action="?/update_scooter" method="POST">
 									<td><input class="w-f text-center bg-gray-800 text-white" 
 									type="number"
@@ -292,22 +289,32 @@
 					id="list_transactions"
 				>
 					<h2 class="text-xl font-bold text-tc">Transactions</h2>
-					<table class="w-full text-tc border-separate border-spacing-2">
-						<thead>
-							<tr class="bg-tc text-white">
-								<th class="p-4 border border-gray-300 rounded-md">Customer</th>
-								<th class="p-4 border border-gray-300 rounded-md">Amount</th>
-							</tr>
-						</thead>
-						<body>
-							{#each data.transactionList as transaction}
-								<tr class="bg-gray-800 text-white">
-									<td>{transaction.customerId}</td>
-									<td>{transaction.amount}</td>
-								</tr>
-							{/each}
-						</body>
-					</table>
+					<div class="w-full table text-tc border-separate border-spacing-2">
+						<div class="table-row bg-tc text-white">
+							<th class="p-4 border border-gray-300 rounded-md">Customer</th>
+							<th class="p-4 border border-gray-300 rounded-md">Amount</th>
+							{#if data.user.isAdmin}
+							<th class="p-4 border border-gray-300 rounded-md">Modified by</th>
+							{/if}
+						</div>
+						{#each data.data.transactionList as transaction}
+							<form class="table-row bg-gray-800 text-white" action="?/update_transaction" method="POST">
+								<div class="table-element">{transaction.customerId}</div>
+								<input class="table-element w-f text-center bg-gray-800 text-white" 
+								type="number"
+								name="amount"
+								min=0
+								step=.01
+								value={transaction.amount} />
+								{#if data.user.isAdmin}
+								<div class="table-element">{transaction.modifierId}</div>
+								{/if}
+								<input type="hidden" name="id" value={transaction.id}/>
+								<input type="hidden" name="modifier" value={data.user.id}/>
+								<button>Update</button> 
+							</form>
+						{/each}
+					</div>
 				</div>
 
 				<div
@@ -323,6 +330,7 @@
 								<th class="p-4 border border-gray-300 rounded-md">Mileage</th>
 								<th class="p-4 border border-gray-300 rounded-md">Start Time</th>
 								<th class="p-4 border border-gray-300 rounded-md">End Time</th>
+								<th class="p-4 border border-gray-300 rounded-md">Price</th>
 								<th class="bg-charcoal"></th>
 							</tr>
 						</thead>
@@ -334,6 +342,7 @@
 									<td>{rental.mileage}</td>
 									<td>{rental.startTime}</td>
 									<td>{rental.endTime}</td>
+									<td>${rental.mileage}</td>
 									{#if !rental.approverId}
 									<td class="bg-charcoal"> 
 										<form method="post" action="?/approve_rental">

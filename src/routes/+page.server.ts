@@ -8,12 +8,14 @@ import { customers, scooters, users } from "$lib/db/schema";
 
 
 export const load = async ({ locals, url }) => {
+	// Check if the user is logged in
 	if (!locals.user) {
 		return {
 			user: null
 		};
 	}
 	
+	// Get all the scooters
 	const scootersResult = await db.select().from(scooters);
 	let scooterList: typeof scootersResult | null = scootersResult;
 
@@ -37,6 +39,7 @@ export const load = async ({ locals, url }) => {
 		}
 	}
 
+	// Return the user and scooter list
 	const res = {
 		user: {
 			id: locals.user.id as string,
@@ -71,6 +74,7 @@ export const actions: Actions = {
 		const email = formData.get("email")?.valueOf()
 		const password = formData.get("password")?.valueOf();
 
+		// Validate the email and password
 		if (typeof email !== 'string' || !isValidEmail(email)) {
 			return fail(400, {
 				message: "Invalid email"
@@ -82,9 +86,12 @@ export const actions: Actions = {
 			});
 		}
 
+		// Check if the user exists
 		const existingUser = await db.query.users.findFirst({
 			where: (table, { eq }) => {return eq(table.email, email)}
 		})
+		
+		// If the user does not exist, return an error
 		if (!existingUser) {
 			// NOTE:
 			// Returning immediately allows malicious actors to figure out valid usernames from response times,
@@ -100,6 +107,7 @@ export const actions: Actions = {
 			});
 		}
 
+		// Check if the password is correct
 		const validPassword = await verify(existingUser.passwordHash, password, {
 			memoryCost: 19456,
 			timeCost: 2,
@@ -112,6 +120,7 @@ export const actions: Actions = {
 			});
 		}
 
+		// Log the user in
 		const session = await lucia.createSession(existingUser.id, {});
 		const sessionCookie = lucia.createSessionCookie(session.id);
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
@@ -138,16 +147,21 @@ export const actions: Actions = {
 				message: "Invalid email"
 			});
 		}
+
 		if (typeof password !== "string" || !isValidPassword(password)) {
 			return fail(400, {
 				message: "Invalid password"
 			});
 		}
+		
 		if (typeof firstname !== "string" || typeof lastname !== "string")
 			return fail(400, {
 				message: "Invalid name"
 			});
 		
+		// TODO: check if the email is already taken
+
+		// Create the new user
 		const userId = generateIdFromEntropySize(10); // 16 characters long
 		const passwordHash = await hash(password, {
 			// recommended minimum parameters
@@ -165,12 +179,13 @@ export const actions: Actions = {
 			passwordHash: passwordHash,
 		});
 
+		// Assume the user is a customer
 		await db.insert(customers).values({
 			id: userId,
 			balance: "0",
 		});
 
-
+		// Log the user in
 		const session = await lucia.createSession(userId, {});
 		const sessionCookie = lucia.createSessionCookie(session.id);
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
