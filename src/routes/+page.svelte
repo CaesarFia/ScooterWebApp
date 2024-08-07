@@ -19,11 +19,12 @@
 	let isEmployee: boolean = false;
 	let selectedScooter: Scooter | null = null;
 
+	// When the user loads check if they are an employee
 	$: if (user) {
 		isEmployee = user.role === 'employee' || user.role === 'admin';
-		console.log(scooterList);
 	}
 
+	// Check if the passwords match and are valid
 	$: if (password && confirmPassword) {
 		if (password !== confirmPassword) {
 			message = 'Passwords do not match';
@@ -34,11 +35,8 @@
 		}
 	}
 
-	$: if (selectedScooter) {
-		console.log(selectedScooter);
-	}
-
 	onMount(async () => {
+		// If the user is logged in and there is no scooter list, get the user's location
 		if (user && !scooterList) {
 			if (!navigator.geolocation) {
 				alert('Geolocation is not supported by your browser');

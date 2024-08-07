@@ -30,7 +30,7 @@ export const actions: Actions = {
             })
         }
 
-
+        // Document the transaction
         await db.insert(transactions).values({
             id: transactionId,
             customerId: customerId,
@@ -38,6 +38,7 @@ export const actions: Actions = {
             amount: cost,
         })
 
+        // Update the customer's balance
         await db.insert(rentals).values({
             id: rentalId,
             customerId: customerId,
