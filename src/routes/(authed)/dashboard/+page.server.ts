@@ -8,6 +8,42 @@ import { isValidEmail, isValidPassword } from '$lib/utils';
 import { eq } from 'drizzle-orm';
 
 export const actions: Actions = {
+	update_scooter: async (event) => {
+		const formData = await event.request.formData();
+
+		const id = formData.get("id")?.toString();
+		const latitude = Number(formData.get('latitude')?.toString());
+		const longitude = Number(formData.get('longitude')?.toString());
+		const checkedOut = formData.has('checked_out');
+		const needRepairs = formData.has('need_repairs');
+		const battery = Number(formData.get('battery')?.toString());
+
+		if (typeof latitude !== 'number' || isNaN(latitude) || latitude < -90 || latitude > 90) {
+			error(400, {
+				message: 'Invalid latitude'
+			});
+		}
+
+		if (typeof longitude !== 'number' || isNaN(longitude) || longitude < -180 || longitude > 180) {
+			error(400, {
+				message: 'Invalid longitude'
+			});
+		}
+
+		if (typeof battery !== 'number' || isNaN(battery) || battery < 0 || battery > 100) {
+			error(400, {
+				message: 'Invalid battery'
+			});
+		}
+
+		await db.update(scooters).set({
+			latitude: latitude,
+			longitude: longitude,
+			checkedOut: checkedOut,
+			needRepairs: needRepairs,
+			battery: battery
+		}).where(eq(scooters.id,id ? id : ""));
+	},
 	approve_rental: async ({request, locals}) => {
 		const formData = await request.formData();
 		console.log(formData.get('id')?.toString());
@@ -22,6 +58,7 @@ export const actions: Actions = {
 		const needRepairs = formData.has('need_repairs');
 		const battery = Number(formData.get('battery')?.toString());
 		const model = formData.get('model')?.toString();
+		const yearPurchased = Number(formData.get('year'))
 
 		if (typeof latitude !== 'number' || isNaN(latitude) || latitude < -90 || latitude > 90) {
 			error(400, {
@@ -50,8 +87,8 @@ export const actions: Actions = {
 			checkedOut: checkedOut,
 			needRepairs: needRepairs,
 			battery: battery,
-			model: model,
-			yearPurchased: new Date()
+			model: model ? model : "nuh uh",
+			yearPurchased: yearPurchased
 		});
 	},
 
@@ -121,7 +158,7 @@ export async function load({ locals }) {
 		error(403, { message: 'Forbidden' });
 	}
 
-	const scooterList = await db.select().from(scooters);
+	const scooterList = (await db.select().from(scooters).orderBy(scooters.number));
 	const userList = await db.select().from(users);
 	const transactionList = await db.select().from(transactions);
 	const rentalList = await db.select().from(rentals);

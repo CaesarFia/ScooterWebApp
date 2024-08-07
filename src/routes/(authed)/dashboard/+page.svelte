@@ -47,7 +47,7 @@
 						min="-180"
 						max="180"
 						bind:value={latitude}
-						step="any"
+						step=".000001"
 						id="latitude"
 						required
 					/><br />
@@ -93,12 +93,24 @@
 						required
 					/><br />
 
-					<label class="block text-tc text-sm font-medium mb-2" for="battery">Model</label>
+					<label class="block text-tc text-sm font-medium mb-2" for="model">Model</label>
 					<input
 						class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
 						type="text"
 						name="model"
 						id="model"
+						required
+					/><br />
+
+					<label class="block text-tc text-sm font-medium mb-2" for="year">Year Purchased</label>
+					<input
+						class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm"
+						type="number"
+						name="year"
+						id="year"
+						value=2024
+						min=0
+						max=2024
 						required
 					/><br />
 
@@ -184,28 +196,51 @@
 					id="list_scooters"
 				>
 					<h2 class="text-xl font-bold text-tc">Scooters</h2>
-					<table class="w-full text-tc border-separate border-spacing-2">
-						<thead>
-							<tr class="bg-tc text-white border-spacing-0">
-								<th class="p-4 border border-gray-300 rounded-md">Latitude</th>
-								<th class="p-4 border border-gray-300 rounded-md">Longitude</th>
-								<th class="p-4 border border-gray-300 rounded-md">Checked Out</th>
-								<th class="p-4 border border-gray-300 rounded-md">Need Repairs</th>
-								<th class="p-4 border border-gray-300 rounded-md">Battery (%)</th>
+					<div class="w-full table text-tc border-separate border-spacing-2">
+							<tr class="bg-tc table-row text-white border-spacing-0">
+								<th class="p-4 table-cell border border-gray-300 rounded-md">Latitude</th>
+								<th class="p-4 table-cell border border-gray-300 rounded-md">Longitude</th>
+								<th class="p-4 table-cell border border-gray-300 rounded-md">Checked Out</th>
+								<th class="p-4 table-cell border border-gray-300 rounded-md">Need Repairs</th>
+								<th class="p-4 table-cell border border-gray-300 rounded-md">Battery (%)</th>
+								<th class="p-4 table-cell border border-gray-300 rounded-md">Year Purchased</th>
+								<th class="p-4 table-cell border border-gray-300 rounded-md">Model</th>
 							</tr>
-						</thead>
-						<tbody>
 							{#each data.data.scooterList as scooter}
-								<tr class="bg-gray-800 text-white">
-									<td class="">{scooter.latitude}</td>
-									<td class="">{scooter.longitude}</td>
-									<td class="">{scooter.checkedOut ? 'Yes' : 'No'}</td>
-									<td class="">{scooter.needRepairs ? 'Yes' : 'No'}</td>
-									<td class="">{scooter.battery}</td>
-								</tr>
+								<form class="table-row bg-gray-800 text-white" action="?/update_scooter" method="POST">
+									<td><input class="w-f text-center bg-gray-800 text-white" 
+									type="number"
+									name="latitude"
+									min="-180"
+									max="180"
+									step=.000001
+									value={scooter.latitude}/></td>
+									<td><input class="w-f text-center bg-gray-800 text-white" 
+									type="number"
+									name="longitude"
+									min="-180"
+									max="180"
+									step=.000001
+									value={scooter.longitude}/></td>
+									<td><button type="button" class="w-full" on:click={() => scooter.checkedOut = !scooter.checkedOut}>{scooter.checkedOut ? 'Yes' : 'No'}</button></td>
+									<td class=""><button type="button" class="w-full" on:click={() => scooter.needRepairs = !scooter.needRepairs}>{scooter.needRepairs ? 'Yes' : 'No'}</button></td>
+									<td><input class="w-f text-center bg-gray-800 text-white" 
+										type="number"
+										name="battery"
+										min=0
+										max="100"
+										step=1
+										value={scooter.battery}/></td>
+									<td class="w-f text-center">{scooter.yearPurchased}</td>
+									<td class="w-f text-center">{scooter.model}</td>
+									<td class="bg-charcoal">
+										<input type="hidden" name="id" value={scooter.id}/>
+										<input type="hidden" name="checked_out" bind:value={scooter.checkedOut}/>
+										<input type="hidden" name="need_repairs" bind:value={scooter.needRepairs}/>
+									<button type="submit" class="px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80">Update</button></td>
+								</form>
 							{/each}
-						</tbody>
-					</table>
+					</div>
 				</div>
 
 				<div
