@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { type Scooter } from "$lib/db/schema";
 	export let scooterList: Scooter[];
-	export let filteredScooterList: Scooter[];
+	export let filteredScooterList: Scooter[] = [];
 	export let selectedScooter: Scooter | null = null;
 
 	let search: string = "";
@@ -20,13 +20,13 @@
 							return false
 						}
 
-						return scooter[key].toString() === value;
+						return scooter[key]?.toString() === value;
 					});
 				}
 				else {
 					filteredScooterList = filteredScooterList.filter(scooter => {
 						for (const key in scooter) {
-							if (scooter[key].toString().includes(filter)) {
+							if (scooter[key] && scooter[key].toString().includes(filter)) {
 								return true;
 							}
 						}
