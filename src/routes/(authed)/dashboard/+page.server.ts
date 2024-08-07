@@ -49,6 +49,18 @@ export const actions: Actions = {
 		console.log(formData.get('id')?.toString());
 		await db.update(rentals).set({ approverId: locals.user?.id }).where(eq(rentals.id, formData.get('id')?.toString()))
 	},
+	update_transaction: async (event) => {
+		const formData = await event.request.formData();
+
+		const id = formData.get("id")?.toString();
+		const modifierId = formData.get("modify")?.toString();
+		const amount = formData.get('amount')?.toString();
+
+		await db.update(transactions).set({
+			amount: amount,
+			modifierId: modifierId
+		}).where(eq(transactions.id,id ? id : ""));
+	},
 	make_scooter: async (event) => {
 		const formData = await event.request.formData();
 
