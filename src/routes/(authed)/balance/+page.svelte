@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+
 	export let data;
 </script>
 
 <div class="h-screen bg-background">
 	<div id="header" class="relative flex h-16 w-screen flex-row items-center justify-between rounded-b-xl border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">
-	  <button class="relative ml-1 flex rounded-full bg-background p-1">
+	  <button class="relative ml-1 flex rounded-full bg-background p-1" on:click={() => goto("/")}>
 		<img src="src/lib/images/arrowBack.png" alt="back arrow img" />
 	  </button>
 	  <div class="text-2xl font-bold">Balance</div>
