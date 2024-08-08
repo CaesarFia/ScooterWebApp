@@ -5,6 +5,8 @@ import db from "$lib/db";
 import { globeDistance, isValidEmail, isValidPassword, subtract } from "$lib/utils";
 import { generateIdFromEntropySize } from "lucia";
 import { customers, rentals, scooters, transactions, users } from "$lib/db/schema";
+import { transact } from "$lib/calls.js";
+import { eq } from "drizzle-orm";
 
 
 export const load = async ({ locals, url }) => {
@@ -214,44 +216,42 @@ export const actions: Actions = {
         const formData = await request.formData();
         const scooterId = formData.get('scooterId') as string;
         const rentalId = generateIdFromEntropySize(10); // 16 characters long
-        const transactionId = generateIdFromEntropySize(10); // 16 characters long
         const now = new Date();
         const customerId = locals.user?.id;
-        const cost = '3';
+        const cost = '5';
         const customerBalance = locals.user?.balance;
 
         if (customerId == null) {
             error(400, {
-                message: 'invalid customer'
+                message: 'Invalid customer'
             });
         }
 
-        // check balance
+        // Check balance
         if (customerBalance == null || subtract(customerBalance, cost).startsWith('-')) {
             console.log(cost)
             error(400, {
-                message: "insufficient balance"
+                message: "Insufficient balance, you must have at least $5"
             })
         }
 
-        // Document the transaction
-        await db.insert(transactions).values({
-            id: transactionId,
-            customerId: customerId,
-            employeeId: null,
-            amount: cost,
-        })
-
-        // Update the customer's balance
+		// Make a new rental entry
         await db.insert(rentals).values({
             id: rentalId,
             customerId: customerId,
             scooterId: scooterId,
             approverId: null,
-            transactionId: transactionId,
+            transactionId: null,
             mileage: 0,
             startTime: now,
             endTime: null,
         });
+
+		// Update the scooter's status
+		await db.update(scooters).set({
+			checkedOut: true
+		}).where(eq(scooters.id, scooterId)); 
+
+		redirect(302, "/history")
     },
 };
