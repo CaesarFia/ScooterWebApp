@@ -4,9 +4,8 @@ import { verify, hash } from "@node-rs/argon2";
 import db from "$lib/db";
 import { globeDistance, isValidEmail, isValidPassword, subtract } from "$lib/utils";
 import { generateIdFromEntropySize } from "lucia";
-import { customers, rentals, scooters, transactions, users } from "$lib/db/schema";
-import { transact } from "$lib/calls.js";
-import { eq } from "drizzle-orm";
+import { customers, rentals, scooters, users } from "$lib/db/schema";
+import { eq, sql } from "drizzle-orm";
 
 
 export const load = async ({ locals, url }) => {
@@ -18,8 +17,12 @@ export const load = async ({ locals, url }) => {
 	}
 	
 	// Get all the scooters
-	const scootersResult = await db.select().from(scooters);
-	let scooterList: typeof scootersResult | null = scootersResult;
+	const scootersResult = await db.select({
+		scooters,
+		numRentals: sql<number>`COUNT(${rentals.id})`,
+		totalMileage: sql<number>`SUM(${rentals.mileage})`,
+	}).from(scooters).leftJoin(rentals, eq(scooters.id, rentals.scooterId)).groupBy(scooters.id);
+	let scooterList = scootersResult.map((scooterJoin) => ({...scooterJoin.scooters, numRentals: scooterJoin.numRentals, totalMileage: scooterJoin.totalMileage}));
 
 	let latitude: number | undefined = undefined;
 	let longitude: number | undefined = undefined;
