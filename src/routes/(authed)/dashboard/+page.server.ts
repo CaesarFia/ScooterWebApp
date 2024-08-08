@@ -46,8 +46,11 @@ export const actions: Actions = {
 	},
 	approve_rental: async ({request, locals}) => {
 		const formData = await request.formData();
-		console.log(formData.get('id')?.toString());
-		await db.update(rentals).set({ approverId: locals.user?.id }).where(eq(rentals.id, formData.get('id')?.toString()))
+		const id = formData.get('id')?.toString();
+		if (!id) {
+			error(400, { message: 'Bad request' });
+		}
+		await db.update(rentals).set({ approverId: locals.user?.id }).where(eq(rentals.id, id))
 	},
 	update_transaction: async (event) => {
 		const formData = await event.request.formData();
@@ -158,7 +161,7 @@ export const actions: Actions = {
 		} else {
 			await db.insert(customers).values({
 				id: userId,
-				balance: 0
+				balance: "0"
 			})
 		}
 	},
@@ -186,15 +189,20 @@ export async function load({ locals }) {
 	const customerList = await db.select().from(users).innerJoin(customers, eq(users.id, customers.id));
 	const employeeList = await db.select().from(users).innerJoin(employees, eq(users.id, employees.id));
 	const transactionList = await db.select().from(transactions);
-	const rentalList = await db.select().from(rentals);
+	const rentalJoinList = await db.select({
+		rentals,
+		approverName: users.firstname,
+		price: transactions.amount,
+	}).from(rentals).leftJoin(users, eq(rentals.approverId, users.id)).leftJoin(transactions, eq(rentals.transactionId, transactions.id));
 	const currentUser = locals.user;
 
 	return {
+		user: currentUser,
 		scooterList,
 		customerList,
 		employeeList,
 		transactionList,
-		rentalList,
+		rentalJoinList,
 		currentUser
 	};
 }

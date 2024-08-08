@@ -16,7 +16,7 @@
 			</a>
 
             {#if user}
-                <span class="text-sm text-gray-500 dark:text-gray-400">Welcome, {user.firstname}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">Welcome, <a href="/profile">{user.firstname}</a></span>
             {/if}
 		</div>
 		<button
@@ -50,7 +50,7 @@
 				<li>
 					<a
 						href="/"
-						class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
+						class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
 						aria-current="page">Map</a
 					>
 				</li>
@@ -105,6 +105,6 @@
 	</div>
 </nav>
 
-<div class="bg-emerald-400 h-screen w-screen justify-center items-center">
+<div class="bg-emerald-400 h-full w-screen justify-center items-center">
 	<slot />
 </div>

@@ -13,10 +13,16 @@
 	let isEmployeeChecked = false;
 </script>
 
-<div class="flex flex-row bg-gray-900">
+<div
+	id="header"
+	class="relative flex h-16 w-screen flex-row items-center justify-center rounded-b-xl border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300"
+>
+	<div class="items-center justify-center text-2xl font-bold">Dashboard</div>
+</div>
+<div class="flex flex-row">
 	<div class="basis-10/12 flex flex-row pt-0">
 		<div class="basis-2/6 p-10 space-y-5 pt-0">
-			<div class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10" id="make_scooter">
+			<div class="rounded-lg border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 p-10" id="make_scooter">
 				<form class="space-y-3" action="?/make_scooter" method="POST">
 					<h2 class="text-xl font-bold text-tc">Add Scooter</h2>
 					<select id="location" bind:value={selectedLocation} class="w-full px-3 py-2 bg-tc text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-tc focus:border-blue-500 sm:text-sm">
@@ -108,7 +114,7 @@
 				</form>
 			</div>
 
-			<div class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10" id="make_user">
+			<div class="rounded-lg border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 p-10" id="make_user">
 				<form class="space-y-3" action="?/make_user" method="POST">
 					<h2 class="text-xl font-bold text-tc">Add User</h2>
 					<label class=" block text-tc text-sm font-medium mb-2" for="firstname">First Name</label>
@@ -179,7 +185,7 @@
 		<div class="basis-4/6 p-10 h-screen pt-0">
 			<div class="space-y-5 h-full flex flex-col">
 				<div
-					class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10 overflow-y-auto h-1/4"
+					class="rounded-lg border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 p-10 overflow-y-auto h-1/4"
 					id="list_scooters"
 				>
 					<h2 class="text-xl font-bold text-tc">Scooters</h2>
@@ -231,7 +237,7 @@
 				</div>
 
 				<div
-					class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10 overflow-y-auto h-1/4"
+					class="rounded-lg border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 p-10 overflow-y-auto h-1/4"
 					id="list_users"
 				>
 					<h2 class="text-xl font-bold text-tc">Users</h2>
@@ -278,7 +284,7 @@
 				</div>
 
 				<div
-					class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10 overflow-y-auto h-1/4"
+					class="rounded-lg border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 p-10 overflow-y-auto h-1/4"
 					id="list_transactions"
 				>
 					<h2 class="text-xl font-bold text-tc">Transactions</h2>
@@ -311,10 +317,10 @@
 				</div>
 
 				<div
-					class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10 overflow-y-auto h-1/4"
+					class="rounded-lg border-2 backdrop-blur-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 p-10 overflow-y-auto h-1/4"
 					id="list_transactions"
 				>
-					<h2 class="text-xl font-bold text-tc">Approve Rentals</h2>
+					<h2 class="text-xl font-bold text-tc">Rentals</h2>
 					<table class="w-full text-tc border-separate border-spacing-2">
 						<thead>
 							<tr class="bg-tc text-white">
@@ -324,26 +330,29 @@
 								<th class="p-4 border border-gray-300 rounded-md">Start Time</th>
 								<th class="p-4 border border-gray-300 rounded-md">End Time</th>
 								<th class="p-4 border border-gray-300 rounded-md">Price</th>
-								<th class="bg-charcoal"></th>
+								<th class="p-4 border border-gray-300 rounded-md">Approver</th>
 							</tr>
 						</thead>
 						<tbody>
-							{#each data.rentalList as rental}
+							{#each data.rentalJoinList as rentalJoin}
+							{@const rental = rentalJoin.rentals}
 								<tr class="bg-gray-800 text-white">
 									<td>{rental.customerId}</td>
 									<td>{rental.scooterId}</td>
 									<td>{rental.mileage}</td>
 									<td>{rental.startTime}</td>
 									<td>{rental.endTime}</td>
-									<td>${rental.mileage}</td>
+									<td>${rentalJoin.price}</td>
 									{#if !rental.approverId}
-									<td class="bg-charcoal"> 
+									<td> 
 										<form method="post" action="?/approve_rental">
-										<input type="hidden" name="id" bind:value={rental.id} />
+										<input type="hidden" name="id" value={rental.id} />
 										<button type="submit"
 										class="w-full px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80"
 										>Approve</button
 									></form></td>
+									{:else}
+									<td>{rentalJoin.approverName}</td>
 									{/if}
 								</tr>
 							{/each}
