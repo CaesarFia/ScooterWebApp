@@ -9,6 +9,9 @@ import { eq } from 'drizzle-orm';
 
 export const actions: Actions = {
 	update_scooter: async (event) => {
+		if (!event.locals.user || event.locals.user.role == "customer") {
+			error(403, { message: 'Forbidden' });
+		}
 		const formData = await event.request.formData();
 
 		const id = formData.get("id")?.toString();
@@ -45,6 +48,9 @@ export const actions: Actions = {
 		}).where(eq(scooters.id,id ? id : ""));
 	},
 	approve_rental: async ({request, locals}) => {
+		if (!locals.user || locals.user.role == "customer") {
+			error(403, { message: 'Forbidden' });
+		}
 		const formData = await request.formData();
 		const id = formData.get('id')?.toString();
 		if (!id) {
@@ -53,6 +59,9 @@ export const actions: Actions = {
 		await db.update(rentals).set({ approverId: locals.user?.id }).where(eq(rentals.id, id))
 	},
 	update_transaction: async (event) => {
+		if (!event.locals.user || event.locals.user.role == "customer") {
+			error(403, { message: 'Forbidden' });
+		}
 		const formData = await event.request.formData();
 
 		const id = formData.get("id")?.toString();
@@ -65,6 +74,9 @@ export const actions: Actions = {
 		}).where(eq(transactions.id,id ? id : ""));
 	},
 	make_scooter: async (event) => {
+		if (!event.locals.user || event.locals.user.role == "customer") {
+			error(403, { message: 'Forbidden' });
+		}
 		const formData = await event.request.formData();
 
 		const latitude = Number(formData.get('latitude')?.toString());
@@ -181,7 +193,7 @@ export const actions: Actions = {
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ locals }) {
-	if (!locals.user || !locals.user.isAdmin) {
+	if (!locals.user || locals.user.role == "customer") {
 		error(403, { message: 'Forbidden' });
 	}
 

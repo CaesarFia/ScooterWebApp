@@ -298,19 +298,19 @@
 						</div>
 						{#each data.transactionList as transaction}
 							<form class="table-row bg-gray-800 text-white" action="?/update_transaction" method="POST">
-								<div class="table-element">{transaction.customerId}</div>
-								<input class="table-element w-f text-center bg-gray-800 text-white" 
+								<td>{transaction.customerId}</td>
+								<td class="justify-right"><input class="w-full text-center bg-gray-800 text-white" 
 								type="number"
 								name="amount"
 								min=0
 								step=.01
-								value={transaction.amount} />
+								value={transaction.amount} /></td>
 								{#if data.user.isAdmin}
-								<div class="table-element">{transaction.modifierId}</div>
+								<td>{transaction.modifierId}</td>
 								{/if}
 								<input type="hidden" name="id" value={transaction.id}/>
 								<input type="hidden" name="modifier" value={data.user.id}/>
-								<button>Update</button> 
+								<button class="px-4 py-2 bg-tc text-white font-semibold rounded-md shadow-sm focus:outline-none hover:opacity-80">Update</button> 
 							</form>
 						{/each}
 					</div>
