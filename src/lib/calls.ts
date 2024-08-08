@@ -1,6 +1,26 @@
+import { generateIdFromEntropySize } from "lucia";
+import db from "./db";
+import { customers, transactions } from "./db/schema";
+import { eq, sql } from "drizzle-orm";
+
 const APIS = '/api/scooters'
 const APIT = '/api/transactions'
 const APIU = '/api/users'
+
+export async function transact(customerId: string, amount: string, employeeId: string | null = null) {
+    const id = generateIdFromEntropySize(10);
+    await db.insert(transactions).values({
+        id,
+        customerId,
+        employeeId,
+        amount
+    });
+    await db.update(customers).set({
+        balance: sql`balance + ${amount}`
+    }).where(eq(customers.id, customerId));
+    return id;
+    
+}
 
 export async function addScooter(latitude: number, longitude: number, battery: number, needRepairs: boolean | undefined) {
     try {

@@ -1,10 +1,12 @@
 import { lucia } from "$lib/server/auth";
-import { fail, redirect, type Actions } from "@sveltejs/kit";
+import { error, fail, redirect, type Actions } from "@sveltejs/kit";
 import { verify, hash } from "@node-rs/argon2";
 import db from "$lib/db";
-import { globeDistance, isValidEmail, isValidPassword } from "$lib/utils";
+import { globeDistance, isValidEmail, isValidPassword, subtract } from "$lib/utils";
 import { generateIdFromEntropySize } from "lucia";
-import { customers, scooters, users } from "$lib/db/schema";
+import { customers, rentals, scooters, transactions, users } from "$lib/db/schema";
+import { transact } from "$lib/calls.js";
+import { eq } from "drizzle-orm";
 
 
 export const load = async ({ locals, url }) => {
@@ -194,5 +196,62 @@ export const actions: Actions = {
 		});
 
 		redirect(302, "/");
-	}
+	},
+	signout: async (event) => {
+		if (!event.locals.session) {
+			redirect(302, "/");
+		}
+		await lucia.invalidateSession(event.locals.session.id);
+		const sessionCookie = lucia.createBlankSessionCookie();
+		event.cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: ".",
+			...sessionCookie.attributes
+		});
+		event.locals.session = null;
+		event.locals.user = null;
+
+		redirect(302, "/");
+	},
+	make_rental: async ({ request, locals }) => {
+        const formData = await request.formData();
+        const scooterId = formData.get('scooterId') as string;
+        const rentalId = generateIdFromEntropySize(10); // 16 characters long
+        const now = new Date();
+        const customerId = locals.user?.id;
+        const cost = '5';
+        const customerBalance = locals.user?.balance;
+
+        if (customerId == null) {
+            error(400, {
+                message: 'Invalid customer'
+            });
+        }
+
+        // Check balance
+        if (customerBalance == null || subtract(customerBalance, cost).startsWith('-')) {
+            console.log(cost)
+            error(400, {
+                message: "Insufficient balance, you must have at least $5"
+            })
+        }
+
+		// Make a new rental entry
+        await db.insert(rentals).values({
+            id: rentalId,
+            customerId: customerId,
+            scooterId: scooterId,
+            approverId: null,
+            transactionId: null,
+            mileage: 0,
+            startTime: now,
+            endTime: null,
+        });
+
+		// Update the scooter's status
+		await db.update(scooters).set({
+			checkedOut: true
+		}).where(eq(scooters.id, scooterId)); 
+
+		redirect(302, "/history")
+    },
 };

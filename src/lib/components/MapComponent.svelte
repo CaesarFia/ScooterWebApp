@@ -37,37 +37,24 @@
 	$: if (selectedScooter) {
 		// Reset the previously selected marker
 		if (lastSelectedScooter) {
-			const lssCopy = {...lastSelectedScooter};
 			const selectedMarker = markers.get(lastSelectedScooter.id);
 			if (selectedMarker) {
-				selectedMarker.remove();
-
-				const marker = new mapboxgl.Marker({ scale: 1, anchor: 'center', color: 'blue' }).setLngLat(
-					[lastSelectedScooter.longitude, lastSelectedScooter.latitude]
-				)
-				if (scooterList.find(scooter => scooter.id === lssCopy.id)) {
-					marker.addTo(map);
-				}
-				marker.getElement().addEventListener('click', () => {
-					selectedScooter = lssCopy;
-				});
-				markers.set(lastSelectedScooter.id, marker);
+				selectedMarker.getElement()
+					.querySelectorAll('[fill="' + selectedMarker._color + '"]')[0]
+					.setAttribute("fill", 'blue');
+				selectedMarker._color = 'blue';
 			}
 		}
 
 		// Change the color of the selected marker
 		const selectedMarker = markers.get(selectedScooter.id);
 		if (selectedMarker) {
-			selectedMarker.remove();
-
-			const marker = new mapboxgl.Marker({ scale: 1, anchor: 'center', color: 'green' }).setLngLat([
-				selectedScooter.longitude,
-				selectedScooter.latitude
-			]).addTo(map);
-			marker.getElement().addEventListener('click', () => {
-				selectedScooter = null;
-			});
-			markers.set(selectedScooter.id, marker);
+			selectedMarker.getElement()
+				.querySelectorAll('[fill="' + selectedMarker._color + '"]')[0]
+				.setAttribute("fill", 'green');
+			selectedMarker._color = 'green';
+			// Bring the selected marker to the front
+			selectedMarker.remove().addTo(map);
 		}
 
 		// Set the lastSelectedScooter for next time

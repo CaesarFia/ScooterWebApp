@@ -7,13 +7,12 @@ export function isValidPassword(password: string): boolean {
 	return password.length >= 6 && password.length <= 255;
 }
 
-
 export function subtract(a: string, b: string): string {
-	if (a[0] === '-' && b[0] === '-') {
+	if (a[0] === '-' && b[0] === '-') {  // If both numbers are negative, subtract a from b
 		return subtract(b.slice(1), a.slice(1));
-	} else if (a[0] === '-') {
+	} else if (a[0] === '-') {  // If a is negative, add a to b and negate the result
 		return '-' + add(a.slice(1), b);
-	} else if (b[0] === '-') {
+	} else if (b[0] === '-') {  // If b is negative, add a to b
 		return add(a, b.slice(1));
 	}
 	

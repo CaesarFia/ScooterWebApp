@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 
 export const actions: Actions = {
 	update_user: async ({ request, locals }) => {
-		if (!locals.user || !locals.user.isAdmin) {
+		if (!locals.user) {
 			error(403, { message: 'Forbidden' });
 		}
 
@@ -53,7 +53,7 @@ export const actions: Actions = {
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ locals }) {
-	if (!locals.user || !locals.user.isAdmin) {
+	if (!locals.user) {
 		error(403, { message: 'Forbidden' });
 	}
 

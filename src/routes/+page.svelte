@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Sidebar from '$lib/components/Sidebar.svelte';
-	import ProfileCircle from '$lib/components/ProfileCircle.svelte';
 	import Map from '$lib/components/MapComponent.svelte';
 	import { isValidPassword } from '$lib/utils';
 	import { onMount } from 'svelte';
@@ -57,10 +55,12 @@
 			</div>
 		</div>
 	{:else if scooterList && filteredScooterList}
-		<Map scooterList={filteredScooterList} userLocation={userLocation} bind:selectedScooter={selectedScooter} />
-		<ScooterList scooterList={scooterList} bind:filteredScooterList={filteredScooterList} bind:selectedScooter={selectedScooter} />
+		<Map scooterList={filteredScooterList} {userLocation} bind:selectedScooter />
+		<div class="fixed right-0 top-50 w-80">
+			<ScooterList {scooterList} bind:filteredScooterList bind:selectedScooter />
+		</div>
 	{:else}
-		<Map userLocation={userLocation} bind:selectedScooter={selectedScooter} />
+		<Map {userLocation} bind:selectedScooter />
 	{/if}
 	{#if !user}
 		<div
@@ -275,8 +275,5 @@
 				{/if}
 			</div>
 		</div>
-	{:else}
-		<Sidebar {isEmployee} />
-		<ProfileCircle />
 	{/if}
 </main>

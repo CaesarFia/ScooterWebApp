@@ -9,6 +9,9 @@ import { eq } from 'drizzle-orm';
 
 export const actions: Actions = {
 	update_scooter: async (event) => {
+		if (!event.locals.user || event.locals.user.role == "customer") {
+			error(403, { message: 'Forbidden' });
+		}
 		const formData = await event.request.formData();
 
 		const id = formData.get("id")?.toString();
@@ -45,11 +48,20 @@ export const actions: Actions = {
 		}).where(eq(scooters.id,id ? id : ""));
 	},
 	approve_rental: async ({request, locals}) => {
+		if (!locals.user || locals.user.role == "customer") {
+			error(403, { message: 'Forbidden' });
+		}
 		const formData = await request.formData();
-		console.log(formData.get('id')?.toString());
-		await db.update(rentals).set({ approverId: locals.user?.id }).where(eq(rentals.id, formData.get('id')?.toString()))
+		const id = formData.get('id')?.toString();
+		if (!id) {
+			error(400, { message: 'Bad request' });
+		}
+		await db.update(rentals).set({ approverId: locals.user?.id }).where(eq(rentals.id, id))
 	},
 	update_transaction: async (event) => {
+		if (!event.locals.user || event.locals.user.role == "customer") {
+			error(403, { message: 'Forbidden' });
+		}
 		const formData = await event.request.formData();
 
 		const id = formData.get("id")?.toString();
@@ -62,6 +74,9 @@ export const actions: Actions = {
 		}).where(eq(transactions.id,id ? id : ""));
 	},
 	make_scooter: async (event) => {
+		if (!event.locals.user || event.locals.user.role == "customer") {
+			error(403, { message: 'Forbidden' });
+		}
 		const formData = await event.request.formData();
 
 		const latitude = Number(formData.get('latitude')?.toString());
@@ -158,7 +173,7 @@ export const actions: Actions = {
 		} else {
 			await db.insert(customers).values({
 				id: userId,
-				balance: 0
+				balance: "0"
 			})
 		}
 	},
@@ -178,7 +193,7 @@ export const actions: Actions = {
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ locals }) {
-	if (!locals.user || !locals.user.isAdmin) {
+	if (!locals.user || locals.user.role == "customer") {
 		error(403, { message: 'Forbidden' });
 	}
 
@@ -186,15 +201,20 @@ export async function load({ locals }) {
 	const customerList = await db.select().from(users).innerJoin(customers, eq(users.id, customers.id));
 	const employeeList = await db.select().from(users).innerJoin(employees, eq(users.id, employees.id));
 	const transactionList = await db.select().from(transactions);
-	const rentalList = await db.select().from(rentals);
+	const rentalJoinList = await db.select({
+		rentals,
+		approverName: users.firstname,
+		price: transactions.amount,
+	}).from(rentals).leftJoin(users, eq(rentals.approverId, users.id)).leftJoin(transactions, eq(rentals.transactionId, transactions.id));
 	const currentUser = locals.user;
 
 	return {
+		user: currentUser,
 		scooterList,
 		customerList,
 		employeeList,
 		transactionList,
-		rentalList,
+		rentalJoinList,
 		currentUser
 	};
 }
