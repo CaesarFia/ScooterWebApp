@@ -1,7 +1,7 @@
 import { eq, desc } from 'drizzle-orm';
 
 import db from '$lib/db';
-import { rentals, scooters } from '$lib/db/schema';
+import { rentals, scooters, transactions } from '$lib/db/schema';
 import { error } from '@sveltejs/kit';
 import { transact } from '$lib/calls';
 import type { Actions } from './$types';
@@ -43,10 +43,10 @@ export const actions: Actions = {
         const startTime = rental.startTime;
         
         // Flat rate of $3 + $5 per 30 minutes
-        const cost = 3 + (Math.ceil((endTime.getTime() - startTime.getTime()) / 1000 / 60) * 5 / 30).toString();
+        const cost = (3 + Math.ceil((endTime.getTime() - startTime.getTime()) / 1000 / 60) / 30 * 5).toString();
 
         // Estimate mileage based on a speed of 10 miles per hour
-        const estimateMileage = Math.ceil((endTime.getTime() - startTime.getTime()) / 1000 / 60) / 60 * 10;
+        const estimateMileage = (endTime.getTime() - startTime.getTime()) / 1000 / 60 / 60 * 10;
 
         const transactionId = await transact(rental.customerId, cost);
 
@@ -76,10 +76,14 @@ export async function load({ locals }) {
     }
 
     const user_rentals = await db
-        .select()
+        .select({
+            rentals,
+            amount: transactions.amount,
+        })
         .from(rentals)
         .orderBy(desc(rentals.startTime))
-        .where(eq(rentals.customerId, locals.user.id));
+        .where(eq(rentals.customerId, locals.user.id))
+        .leftJoin(transactions, eq(rentals.transactionId, transactions.id));
 
     const user = locals.user
     console.log(user_rentals)
