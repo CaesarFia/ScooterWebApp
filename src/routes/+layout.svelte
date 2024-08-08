@@ -14,6 +14,10 @@
 					>Vroom</span
 				>
 			</a>
+
+            {#if user}
+                <span class="text-sm text-gray-500 dark:text-gray-400">Welcome, {user.firstname}</span>
+            {/if}
 		</div>
 		<button
 			data-collapse-toggle="navbar-default"
