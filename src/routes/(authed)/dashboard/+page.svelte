@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Sidebar from '$lib/components/Sidebar.svelte';
 	import { locations } from '$lib/db/schema';
 
 	export let data;
@@ -11,16 +10,10 @@
 	$: latitude = selectedLocation.latitude;
 	$: longitude = selectedLocation.longitude;
 
-	const isEmployee = true;
-	
 	let isEmployeeChecked = false;
 </script>
 
 <div class="flex flex-row bg-gray-900">
-	<div class="basis-72">
-		<Sidebar {isEmployee} />
-	</div>
-
 	<div class="basis-10/12 flex flex-row pt-0">
 		<div class="basis-2/6 p-10 space-y-5 pt-0">
 			<div class="rounded-lg bg-charcoal border-tc border-solid border-2 p-10" id="make_scooter">
