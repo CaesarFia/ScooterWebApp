@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Scooter } from "$lib/db/schema";
+	import { type Scooter } from '$lib/db/schema';
 	export let scooterList: Scooter[];
 	export let filteredScooterList: Scooter[] = [];
 	export let selectedScooter: Scooter | null = null;
@@ -32,10 +32,10 @@
 						}
 						return false;
 					})
-				}
 			}
 		}
-	}	
+	}
+	}
 </script>
 
 <div class="container">
@@ -50,7 +50,9 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			class="scooter-item {scooter.id === selectedScooter?.id ? 'selected' : ''}"
+			class="scooter-item {scooter.id === selectedScooter?.id
+				? 'selected'
+				: ''}"
 			on:click={() => {
 				selectedScooter = scooter;
 			}}
@@ -59,9 +61,15 @@
 				<div>{scooter.latitude}, {scooter.longitude}</div>
 				<div>Battery: {scooter.battery}%</div>
 			</div>
-			<form method="POST" action="/rent?/make_rental">
+			<form method="POST" action="/?/make_rental">
 				<input type="hidden" name="scooterId" value={scooter.id} />
-				<button class="button">Rent</button>
+				{#if scooter.checkedOut}
+					<button disabled class="button">In Use</button>
+				{:else if scooter.needRepairs}
+					<button disabled class="button">Out of Service</button>
+				{:else}
+					<button class="button">Rent</button>
+				{/if}
 			</form>
 		</div>
 	{/each}
@@ -69,7 +77,7 @@
 
 <style>
 	.container {
-		@apply fixed right-0 top-0 mt-4 mr-4 p-4 w-80 bg-gray-800 text-white rounded-lg shadow-lg;
+		@apply mt-4 mr-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg;
 	}
 	.scooter-item {
 		@apply flex justify-between items-center py-2 px-4 bg-gray-700 rounded-lg mb-2;
@@ -80,6 +88,6 @@
 	}
 
 	.button {
-		@apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded;
+		@apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded disabled:bg-gray-500 disabled:cursor-not-allowed;
 	}
 </style>
