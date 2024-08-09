@@ -17,12 +17,12 @@ export const load = async ({ locals, url }) => {
 	}
 	
 	// Get all the scooters
-	const scootersResult = await db.select({
+	const scootersResult = (await db.select({
 		scooters,
 		numRentals: sql<number>`COUNT(${rentals.id})`,
-		totalMileage: sql<number>`SUM(${rentals.mileage})`,
-	}).from(scooters).leftJoin(rentals, eq(scooters.id, rentals.scooterId)).groupBy(scooters.id);
-	let scooterList = scootersResult.map((scooterJoin) => ({...scooterJoin.scooters, numRentals: scooterJoin.numRentals, totalMileage: scooterJoin.totalMileage}));
+		totalMileage: sql<number | null>`SUM(${rentals.mileage})`,
+	}).from(scooters).leftJoin(rentals, eq(scooters.id, rentals.scooterId)).groupBy(scooters.id)).map((scooterJoin) => ({...scooterJoin.scooters, numRentals: scooterJoin.numRentals, totalMileage: scooterJoin.totalMileage}));
+	let scooterList: typeof scootersResult | null = scootersResult;
 
 	let latitude: number | undefined = undefined;
 	let longitude: number | undefined = undefined;

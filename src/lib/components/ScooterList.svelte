@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { type Scooter } from '$lib/db/schema';
+	import { type Scooter as DbScooter } from '$lib/db/schema';
 	export let scooterList: Scooter[];
 	export let filteredScooterList: Scooter[] = [];
 	export let selectedScooter: Scooter | null = null;
 
+	type Scooter = DbScooter & { totalMileage: number | null, numRentals: number }
 	let search: string = "";
 
 	$: if (scooterList || search) {
@@ -60,6 +61,8 @@
 			<div>
 				<div>{scooter.latitude}, {scooter.longitude}</div>
 				<div>Battery: {scooter.battery}%</div>
+				<div>Number of Rentals: {scooter.numRentals}</div>
+				<div>Total Mileage: {scooter.totalMileage ?? 0}</div>
 			</div>
 			<form method="POST" action="/?/make_rental">
 				<input type="hidden" name="scooterId" value={scooter.id} />
